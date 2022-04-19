@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Enviar Arquivo";
+}
+
+<h1>Enviar</h1>
+
+<h4>Arquivo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <div class="container">
+            @if (ViewData["Error"] != null)
+            {
+                <h2 class="display-4">@ViewData["Erro"]</h2>
+            }
+        </div>
+        <div class="container">
+            @if (ViewData["Resultado"] != null)
+            {
+                <h2 class="display-5">@ViewData["Resultado"]</h2>
+            }
+        </div>
+    </div>
+</div>
