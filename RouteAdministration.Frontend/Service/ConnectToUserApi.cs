@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RouteAdministration.Frontend.Service
@@ -44,6 +45,73 @@ namespace RouteAdministration.Frontend.Service
                     users[0].Error = exception.StatusCode.ToString();
 
                 return users;
+            }
+        }
+
+        public async Task<User> GetUserByUsername(string username)
+        {
+            User user = new();
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                    client.BaseAddress = new Uri(_baseUri);
+
+                    HttpResponseMessage response = await client.GetAsync("ApiUser/login/" + username);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseBody = response.Content.ReadAsStringAsync().Result;
+
+                        user = JsonConvert.DeserializeObject<User>(responseBody);
+                    }
+                    else
+                        user = null;
+                }
+
+                return user;
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == null)
+                    user.Error = exception.InnerException.Message;
+                else
+                    user.Error = exception.StatusCode.ToString();
+
+                return user;
+            }
+        }
+
+        public async Task<User> CreateNewUser(User user)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_baseUri);
+
+                    var json = JsonConvert.SerializeObject(user);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var result = await client.PostAsync("ApiUser", content);
+
+                    if (result.IsSuccessStatusCode)
+                        return user;
+                    else
+                        user = null;
+                    
+                    return user;
+                }
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == null)
+                    user.Error = exception.InnerException.Message;
+                else
+                    user.Error = exception.StatusCode.ToString();
+
+                return user;
             }
         }
     }

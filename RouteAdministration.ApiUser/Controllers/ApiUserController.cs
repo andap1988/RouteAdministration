@@ -43,6 +43,17 @@ namespace RouteAdministration.ApiUser.Controllers
             return user;
         }
 
+        [HttpGet("login/{username}")]
+        public ActionResult<User> GetUserByUsername(string username)
+        {
+            var user = _userService.GetUserByUsername(username);
+
+            if (user == null)
+                return NotFound();
+
+            return user;
+        }
+
         [HttpPost]
         public async Task<ActionResult<User>> Create(User user)
         {
