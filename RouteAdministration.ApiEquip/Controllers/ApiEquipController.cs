@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RouteAdministration.ApiEquip.Model;
+using Models;
 using RouteAdministration.ApiEquip.Service;
 using System.Collections.Generic;
 
@@ -26,6 +26,58 @@ namespace RouteAdministration.ApiEquip.Controllers
                 return BadRequest("Equipe - A Api esta fora do ar. Tente novamente em instantes.");
 
             return equip;
+        }
+
+        [HttpGet("{id}", Name = "GetEquip")]
+        public ActionResult<Equip> Get(string id)
+        {
+            var equip = _equipService.Get(id);
+
+            if (equip == null)
+                return NotFound();
+
+            return equip;
+        }
+
+        [HttpPost]
+        public ActionResult<Equip> Create(Equip equip)
+        {
+            var equipInsertion = _equipService.Create(equip);
+
+            if (equipInsertion == null)
+                return BadRequest("Equipe - A Api esta fora do ar. Tente novamente em instantes.");
+
+            return CreatedAtRoute("GetEquip", new { id = equip.Id }, equip);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(string id, Equip equipIn)
+        {
+            Equip equip = new();
+
+            equip = _equipService.Get(id);
+
+            if (equip == null)
+                return NotFound();
+
+            _equipService.Update(id, equipIn);
+
+            return CreatedAtRoute("GetEquip", new { id = equipIn.Id }, equipIn);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id, Equip equipIn)
+        {
+            Equip equip = new();
+
+            equip = _equipService.Get(id);
+
+            if (equip == null)
+                return NotFound();
+
+            _equipService.Remove(equipIn.Id, equipIn);
+
+            return Ok();
         }
     }
 }

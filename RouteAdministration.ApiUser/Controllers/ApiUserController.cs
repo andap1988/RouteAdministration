@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RouteAdministration.ApiUser.Model;
+using Models;
 using RouteAdministration.ApiUser.Service;
 using System.Collections.Generic;
 using System.Threading.Tasks;

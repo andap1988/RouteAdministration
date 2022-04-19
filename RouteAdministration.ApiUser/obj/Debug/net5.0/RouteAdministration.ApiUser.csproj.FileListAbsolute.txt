@@ -42,3 +42,6 @@ X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiUser\obj\Deb
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiUser\obj\Debug\net5.0\ref\RouteAdministration.ApiUser.dll
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiUser\obj\Debug\net5.0\RouteAdministration.ApiUser.pdb
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiUser\obj\Debug\net5.0\RouteAdministration.ApiUser.genruntimeconfig.cache
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiUser\bin\Debug\net5.0\Models.dll
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiUser\bin\Debug\net5.0\Models.pdb
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiUser\bin\Debug\net5.0\Newtonsoft.Json.dll

@@ -1,6 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using Models;
+using MongoDB.Driver;
 using RouteAdministration.ApiUser.Configuration;
-using RouteAdministration.ApiUser.Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

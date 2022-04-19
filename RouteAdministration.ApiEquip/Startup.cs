@@ -6,7 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using RouteAdministration.ApiEquip.Configuration;
+using RouteAdministration.ApiEquip.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +35,14 @@ namespace RouteAdministration.ApiEquip
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RouteAdministration.ApiEquip", Version = "v1" });
             });
+
+            services.Configure<RAEquipSettings>(
+                Configuration.GetSection(nameof(RAEquipSettings)));
+
+            services.AddSingleton<IRAEquipSettings>(sp =>
+                    sp.GetRequiredService<IOptions<RAEquipSettings>>().Value);
+
+            services.AddSingleton<ApiEquipService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
