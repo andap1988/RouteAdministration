@@ -1,15 +1,13 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace RouteAdministration.ApiUser.Model
+namespace RouteAdministration.ApiEquip.Model
 {
-    public class User
+    public class Equip
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Error { get; set; } = string.Empty;
+        public string City { get; set; }
     }
 }

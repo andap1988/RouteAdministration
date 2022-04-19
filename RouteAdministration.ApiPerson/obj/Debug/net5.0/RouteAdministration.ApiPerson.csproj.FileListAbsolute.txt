@@ -1,9 +1,3 @@
-X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.GeneratedMSBuildEditorConfig.editorconfig
-X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.AssemblyInfoInputs.cache
-X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.AssemblyInfo.cs
-X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.csproj.CoreCompileInputs.cache
-X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.MvcApplicationPartsAssemblyInfo.cs
-X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.MvcApplicationPartsAssemblyInfo.cache
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\appsettings.Development.json
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\appsettings.json
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\RouteAdministration.ApiPerson.exe
@@ -33,6 +27,12 @@ X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\D
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\runtimes\linux\native\libmongocrypt.so
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\runtimes\osx\native\libmongocrypt.dylib
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\runtimes\win\native\mongocrypt.dll
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.GeneratedMSBuildEditorConfig.editorconfig
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.AssemblyInfoInputs.cache
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.AssemblyInfo.cs
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.csproj.CoreCompileInputs.cache
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.MvcApplicationPartsAssemblyInfo.cs
+X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.MvcApplicationPartsAssemblyInfo.cache
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\scopedcss\bundle\RouteAdministration.ApiPerson.styles.css
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\staticwebassets\RouteAdministration.ApiPerson.StaticWebAssets.Manifest.cache
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.RazorTargetAssemblyInfo.cache

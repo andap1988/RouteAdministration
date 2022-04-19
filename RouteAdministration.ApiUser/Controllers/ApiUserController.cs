@@ -48,6 +48,9 @@ namespace RouteAdministration.ApiUser.Controllers
         {
             var userInsertion = await _userService.Create(user);
 
+            if (userInsertion.Error == "yesUser")
+                return BadRequest("User - O usuário já está cadastrado no sistema.");
+
             if (userInsertion == null)
                 return BadRequest("User - A Api esta fora do ar. Tente novamente em instantes.");
 

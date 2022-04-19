@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace RouteAdministration.ApiPerson.Model
+namespace RouteAdministration.ApiTeam.Model
 {
-    public class Person
+    public class Team
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string Id { get; set; }
-
         [Display(Name = "Nome")]
         [Required(ErrorMessage = "O nome é obrigatório.")]
         public string Name { get; set; }
-        public string TeamName { get; set; } = string.Empty;
-        public string Error { get; set; } = string.Empty;
+        [Display(Name = "Cidade")]
+        [Required(ErrorMessage = "O nome é obrigatório.")]
+        public string City { get; set; }
+        
+        /*[Display(Name = "Lista de Pessoas")]
+        [Required(ErrorMessage = "O nome é obrigatório.")]
+        public List<Person> Person { get; set; }*/
     }
 }

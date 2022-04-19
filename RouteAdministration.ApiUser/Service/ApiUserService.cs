@@ -35,8 +35,26 @@ namespace RouteAdministration.ApiUser.Service
             return user;
         }
 
+        public User GetUserByUsername(string username)
+        {
+            User user = new();
+
+            user = _user.Find<User>(user => user.Username == username).FirstOrDefault();
+
+            return user;
+        }
+
         public async Task<User> Create(User user)
         {
+            var verifyUser = GetUserByUsername(user.Username);
+
+            if (verifyUser != null)
+            {
+                user.Error = "yesUser";
+
+                return user;
+            }
+
             _user.InsertOne(user);
 
             return user;
