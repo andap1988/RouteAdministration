@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RouteAdministration.Frontend.Models;
 using RouteAdministration.Frontend.Service;
@@ -21,10 +22,29 @@ namespace RouteAdministration.Frontend.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //var a = await new ConnectToPersonApi().GetPeople();
-            //var a = await new ConnectToCityApi().GetCities();
-            //var a = await new ConnectToEquipApi().GetEquips();
-            //var a = await new ConnectToUserApi().GetUsers();
+            string user = "Anonymous";
+            bool authenticate = false;
+
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                user = HttpContext.User.Identity.Name;
+                authenticate = true;
+
+                if (HttpContext.User.IsInRole("adm"))
+                    ViewBag.Role = "adm";
+                else
+                    ViewBag.Role = "user";
+
+            }
+            else
+            {
+                user = "Não Logado";
+                authenticate = false;
+                ViewBag.Role = "";
+            }
+
+            ViewBag.User = user;
+            ViewBag.Authenticate = authenticate;
 
             return View();
         }

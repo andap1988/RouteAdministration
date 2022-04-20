@@ -23,6 +23,15 @@ namespace RouteAdministration.Frontend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication("CookieAuthentication")
+                .AddCookie("CookieAuthentication", config =>
+                {
+                    config.Cookie.Name = "UserLoginCookie";
+                    config.LoginPath = "/Login/Index";
+                    config.AccessDeniedPath = "/Login/AccessDenied";
+                    config.ExpireTimeSpan = TimeSpan.FromHours(1);
+                });
+
             services.AddControllersWithViews();
         }
 
@@ -43,6 +52,8 @@ namespace RouteAdministration.Frontend
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Models.Person>
+
+@{
+    ViewData["Title"] = "Pessoa";
+}
+
+<h1>Pessoas</h1>
+<hr />
+
+
+@if (!ViewBag.Authenticate)
+{
+    <div class="row h5">
+        <div class="col-md-12">
+            <span>Para acessar essa página, é necessário estar logado no sistema.</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 p-0 m-1">
+            <form method="post" asp-controller="Login" asp-action="Index">
+                <input class="btn btn-link" type="submit" value="Entrar" />
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <p>
+        <a asp-action="Create">Nova Pessoa</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

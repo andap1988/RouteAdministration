@@ -6,20 +6,39 @@
 
 <h4>Arquivo</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post" enctype="multipart/form-data" asp-controller="Upload" asp-action="SendFile">
-            <div class="form-group">
-                <div class="col-md-10">
-                    <p>Enviar arquivo</p>
-                    <input type="file" name="file" value="Escolher Arquivo" multiple />
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-10">
-                    <input type="submit" value="Enviar Arquivo" />
-                </div>
-            </div>
-        </form>
+
+@if (!ViewBag.Authenticate)
+{
+    <div class="row h5">
+        <div class="col-md-12">
+            <span>Para acessar essa página, é necessário estar logado no sistema.</span>
+        </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-md-6 p-0 m-1">
+                <form method="post" asp-controller="Login" asp-action="Index">
+                    <input class="btn btn-link" type="submit" value="Entrar" />
+                </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post" enctype="multipart/form-data" asp-controller="Upload" asp-action="SendFile">
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <p>Enviar arquivo</p>
+                        <input type="file" name="file" value="Escolher Arquivo" multiple />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <input type="submit" value="Enviar Arquivo" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}

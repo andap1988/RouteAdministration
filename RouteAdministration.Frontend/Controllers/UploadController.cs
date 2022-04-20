@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RouteAdministration.Frontend.Service;
@@ -18,10 +19,29 @@ namespace RouteAdministration.Frontend.Controllers
 
         public IActionResult Index()
         {
-           /* var name = HttpContext.Session.GetString("username");
+            string user = "Anonymous";
+            bool authenticate = false;
 
-            if (name == null)
-                return RedirectToRoute(new { controller = "Home", action = "Index" });*/
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                user = HttpContext.User.Identity.Name;
+                authenticate = true;
+
+                if (HttpContext.User.IsInRole("adm"))
+                    ViewBag.Role = "adm";
+                else
+                    ViewBag.Role = "user";
+
+            }
+            else
+            {
+                user = "Não Logado";
+                authenticate = false;
+                ViewBag.Role = "";
+            }
+
+            ViewBag.User = user;
+            ViewBag.Authenticate = authenticate;
 
             return View();
         }

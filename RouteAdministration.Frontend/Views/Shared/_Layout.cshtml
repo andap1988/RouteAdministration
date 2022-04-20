@@ -11,7 +11,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RouteAdministration.Frontend</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Route Administration</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -19,17 +19,38 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Upload" asp-action="Index">Enviar Arquivo</a>
+                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Login" asp-action="Index">Entrar</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Entrar</a>
+                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Upload" asp-action="Index">Enviar Arquivo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Person" asp-action="Index">Pessoas</a>
                         </li>
                     </ul>
                 </div>
             </div>
+            @if (string.IsNullOrEmpty(@ViewBag.Role))
+            {
+                <div class="col-2 text-center">
+                    Olá, Visitante!
+                    <form method="post" asp-controller="Login" asp-action="Index">
+                        <input class="btn btn-link" type="submit" value="Entrar" />
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="col-2 text-center">
+                    Olá, @ViewBag.User!
+                    <form method="post" asp-controller="Login" asp-action="Logout">
+                        <input class="btn btn-link" type="submit" value="Sair?" />
+                    </form>
+                </div>
+            }
         </nav>
     </header>
     <div class="container">
@@ -40,7 +61,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - RouteAdministration.Frontend - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - Route Administration - Gerenciador de Rotas
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
