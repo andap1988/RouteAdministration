@@ -22,7 +22,6 @@ namespace RouteAdministration.Frontend.Controllers
                     ViewBag.Role = "adm";
                 else
                     ViewBag.Role = "user";
-
             }
             else
             {
@@ -50,8 +49,8 @@ namespace RouteAdministration.Frontend.Controllers
         {
             var personInsertion = await new ConnectToPersonApi().CreateNewPerson(person);
 
-            if (personInsertion == null || personInsertion.Error != "")
-                return BadRequest("Pessoa - Houve um erro na gravação do novo usuário. Favor tentar novamente");
+            if (personInsertion == null)
+                return BadRequest("Pessoa - Houve um erro na gravação da nova pessoa. Favor tentar novamente");
 
             return RedirectToAction(nameof(Index));
         }
@@ -72,11 +71,14 @@ namespace RouteAdministration.Frontend.Controllers
             return View(person);
         }
 
-        /*[HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, Person person)
         {
+            var personEdit = await new ConnectToPersonApi().EditPerson(person);
 
+            if (personEdit == null)
+                return BadRequest("Pessoa - Houve um erro na edição da pessoa. Favor tentar novamente");
 
             return RedirectToAction(nameof(Index));
         }
@@ -88,7 +90,7 @@ namespace RouteAdministration.Frontend.Controllers
                 return NotFound();
             }
 
-            var person = _personService.Get(id);
+            var person = await new ConnectToPersonApi().GetPersonById(id);
 
             if (person == null)
             {
@@ -98,13 +100,17 @@ namespace RouteAdministration.Frontend.Controllers
             return View(person);
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string id, Person person)
         {
-            _personService.Delete(id, person);
+            var personRemove = await new ConnectToPersonApi().RemovePerson(id);
+
+            if (personRemove.Error != "ok")
+                return BadRequest("Pessoa - Houve um erro na exclusão do usuário. Favor tentar novamente");
 
             return RedirectToAction(nameof(Index));
-        }*/
+        }
     }
 }

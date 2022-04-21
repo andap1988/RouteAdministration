@@ -66,16 +66,16 @@ namespace RouteAdministration.ApiCity.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id, City cityIn)
+        public IActionResult Delete(string id)
         {
-            City equip = new();
+            City city = new();
 
-            equip = _cityService.Get(id);
+            city = _cityService.Get(id);
 
-            if (equip == null)
+            if (city == null)
                 return NotFound();
 
-            _cityService.Remove(cityIn.Id, cityIn);
+            _cityService.Remove(city.Id, city);
 
             return Ok();
         }

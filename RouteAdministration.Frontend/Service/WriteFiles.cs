@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -31,6 +32,22 @@ namespace RouteAdministration.Frontend.Service
             catch (Exception exception)
             {
                 return isSaveSuccess;
+            }
+        }
+
+        public static void WriteStringInFolder(List<string> text, string title, string pathWebRoot)
+        {
+            string fileName = title + ".txt";
+            string folder = "\\File\\";
+            string pathFinal = pathWebRoot + folder + fileName;
+
+            using (StreamWriter writer = new(pathFinal))
+            {
+                text.ForEach(textUnique =>
+                {
+                    writer.WriteLine(textUnique);
+
+                });
             }
         }
     }

@@ -22,6 +22,6 @@ namespace Models
 
         [Display(Name = "Pessoas do Time")]
         public List<Person> People { get; set; } = new();
-        public string Error { get; set; }
+        public string Error { get; set; } = String.Empty;
     }
 }

@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Cidades";
+}
+
+<h1>Cidades Disponíveis</h1>
+
+<h4>Escolha das Cidades</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Equips">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="font-weight-bold">Serviços</label>
+                <fieldset data-role="controlgroup">
+                    @foreach (var city in @ViewBag.Cities)
+                    {
+                        <input type="radio" name="cities" id="@city" value="@city">
+                        <label for="@city">@city</label>
+                        <br />
+                    }
+                </fieldset>
+            </div>
+            <br />
+@*            <div class="form-group" id="divCity" style="display: none">
+                <label class="font-weight-bold">Cidades</label>
+                <fieldset data-role="controlgroup">
+                    @foreach (var city in @ViewBag.Cities)
+                    {
+                        <input type="radio" name="city" id="@city.Name" value="@city.Name">
+                        <label for="@city.Name">@city.Name</label>
+                        <br />
+                    }
+                </fieldset>
+            </div>*@
+            <div class="form-group" id="btnSend">
+                <input type="submit" id="btn" value="Enviar" class="btn btn-primary" />
+            </div>
+@*            <div class="form-group">
+                <input type="submit" id="btnSelect" value="Selecionar" class="btn btn-primary" onclick="showCity(event)" />
+            </div>*@
+        </form>
+    </div>
+</div>

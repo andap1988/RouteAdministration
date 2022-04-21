@@ -84,6 +84,42 @@ namespace RouteAdministration.Frontend.Service
             }
         }
 
+        public async Task<Person> GetPersonByName(string name)
+        {
+            Person person = new();
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                    client.BaseAddress = new Uri(_baseUri);
+
+                    HttpResponseMessage response = await client.GetAsync("ApiPerson/name/" + name);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseBody = response.Content.ReadAsStringAsync().Result;
+
+                        person = JsonConvert.DeserializeObject<Person>(responseBody);
+                    }
+                    else
+                        person = null;
+                }
+
+                return person;
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == null)
+                    person.Error = exception.InnerException.Message;
+                else
+                    person.Error = exception.StatusCode.ToString();
+
+                return person;
+            }
+        }
+
         public async Task<Person> CreateNewPerson(Person person)
         {
             try
@@ -100,6 +136,67 @@ namespace RouteAdministration.Frontend.Service
                         return person;
                     else
                         person = null;
+
+                    return person;
+                }
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == null)
+                    person.Error = exception.InnerException.Message;
+                else
+                    person.Error = exception.StatusCode.ToString();
+
+                return person;
+            }
+        }
+
+        public async Task<Person> EditPerson(Person person)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_baseUri);
+
+                    var json = JsonConvert.SerializeObject(person);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var result = await client.PutAsync($"ApiPerson/{person.Id}", content);
+
+                    if (result.IsSuccessStatusCode)
+                        return person;
+                    else
+                        person = null;
+
+                    return person;
+                }
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == null)
+                    person.Error = exception.InnerException.Message;
+                else
+                    person.Error = exception.StatusCode.ToString();
+
+                return person;
+            }
+        }
+
+        public async Task<Person> RemovePerson(string id)
+        {
+            Person person = new();
+            try
+            {
+                using (var client = new HttpClient())
+                {                    
+                    client.BaseAddress = new Uri(_baseUri);
+
+                    var result = await client.DeleteAsync($"ApiPerson/{id}");
+
+                    if (result.IsSuccessStatusCode)
+                        person.Error = "ok";
+                    else
+                        person.Error = "notSave";
 
                     return person;
                 }

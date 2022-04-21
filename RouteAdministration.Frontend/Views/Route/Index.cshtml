@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Rotas";
+}
+
+<h1>Rotas</h1>
+<hr />
+
+@if (!ViewBag.Authenticate)
+{
+    <div class="row h5">
+        <div class="col-md-12">
+            <span>Para acessar essa página, é necessário estar logado no sistema.</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 p-0 m-1">
+            <form method="post" asp-controller="Login" asp-action="Index">
+                <input class="btn btn-link" type="submit" value="Entrar" />
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <h5>Selecione as colunas desejadas</h5>
+    <br />
+    <form asp-action="ServicesCities">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @{
+            List<string> headers = ViewBag.Headers;
+            foreach (var header in headers)
+            {
+                <input type="checkbox" name="selectedHeaders" value="@header" id="@header" class="form-check-inline" />
+                <label for="@header">@header</label>
+                <br />
+            }
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Enviar" class="btn btn-primary" />
+            </div>
+        }
+    </form>
+}

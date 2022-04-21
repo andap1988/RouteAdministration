@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RouteAdministration.Frontend.Service
@@ -44,6 +45,104 @@ namespace RouteAdministration.Frontend.Service
                     equips[0].Error = exception.StatusCode.ToString();
 
                 return equips;
+            }
+        }
+
+        public async Task<Equip> GetEquipById(string id)
+        {
+            Equip equip = new();
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                    client.BaseAddress = new Uri(_baseUri);
+
+                    HttpResponseMessage response = await client.GetAsync("ApiEquip/" + id);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseBody = response.Content.ReadAsStringAsync().Result;
+
+                        equip = JsonConvert.DeserializeObject<Equip>(responseBody);
+                    }
+                    else
+                        equip = null;
+                }
+
+                return equip;
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == null)
+                    equip.Error = exception.InnerException.Message;
+                else
+                    equip.Error = exception.StatusCode.ToString();
+
+                return equip;
+            }
+        }
+
+        public async Task<Equip> CreateNewEquip(Equip equip)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_baseUri);
+
+                    var json = JsonConvert.SerializeObject(equip);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    var result = await client.PostAsync("ApiEquip", content);
+
+                    if (result.IsSuccessStatusCode)
+                        return equip;
+                    else
+                        equip = null;
+
+                    return equip;
+                }
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == null)
+                    equip.Error = exception.InnerException.Message;
+                else
+                    equip.Error = exception.StatusCode.ToString();
+
+                return equip;
+            }
+        }
+
+        public async Task<Equip> RemoveEquip(string id)
+        {
+            Equip equip = new();
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(_baseUri);
+
+                    var result = await client.DeleteAsync($"ApiEquip/{id}");
+
+                    if (result.IsSuccessStatusCode)
+                        equip.Error = "ok";
+                    else
+                        equip.Error = "notSave";
+
+                    return equip;
+                }
+            }
+            catch (HttpRequestException exception)
+            {
+                if (exception.StatusCode == null)
+                    equip.Error = exception.InnerException.Message;
+                else
+                    equip.Error = exception.StatusCode.ToString();
+
+                return equip;
             }
         }
     }

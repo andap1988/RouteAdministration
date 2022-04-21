@@ -66,7 +66,7 @@ namespace RouteAdministration.ApiEquip.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id, Equip equipIn)
+        public IActionResult Delete(string id)
         {
             Equip equip = new();
 
@@ -75,7 +75,7 @@ namespace RouteAdministration.ApiEquip.Controllers
             if (equip == null)
                 return NotFound();
 
-            _equipService.Remove(equipIn.Id, equipIn);
+            _equipService.Remove(equip.Id, equip);
 
             return Ok();
         }

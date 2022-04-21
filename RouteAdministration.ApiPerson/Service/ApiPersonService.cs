@@ -36,6 +36,15 @@ namespace RouteAdministration.ApiPerson.Service
             return person;
         }
 
+        public Person GetByName(string name)
+        {
+            Person person = new();
+
+            person = _person.Find<Person>(person => person.Name == name).FirstOrDefault();
+
+            return person;
+        }
+
         public Person Create(Person person)
         {
             _person.InsertOne(person);

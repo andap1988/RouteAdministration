@@ -19,6 +19,6 @@ namespace Models
 
         [Display(Name = "Estado")]
         public string State { get; set; }
-        public string Error { get; set; }
+        public string Error { get; set; } = String.Empty;
     }
 }

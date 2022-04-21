@@ -43,6 +43,17 @@ namespace RouteAdministration.ApiPerson.Controllers
             return person;
         }
 
+        [HttpGet("name/{name}")]
+        public ActionResult<Person> GetByName(string name)
+        {
+            var person = _personService.GetByName(name);
+
+            if (person == null)
+                return NotFound();
+
+            return person;
+        }
+
         [HttpPost]
         public ActionResult<Person> Create(Person person)
         {
@@ -70,7 +81,7 @@ namespace RouteAdministration.ApiPerson.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id, Person personIn)
+        public IActionResult Delete(string id)
         {
             Person person = new();
 
@@ -79,7 +90,7 @@ namespace RouteAdministration.ApiPerson.Controllers
             if (person == null)
                 return NotFound();
 
-            _personService.Remove(personIn.Id, personIn);
+            _personService.Remove(person.Id, person);
 
             return Ok();
         }

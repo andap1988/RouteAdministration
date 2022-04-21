@@ -1,0 +1,61 @@
+﻿@model Models.Equip
+@{
+    ViewData["Title"] = "Inserir Equipe";
+}
+
+<h1>Inserir</h1>
+
+<h4>Equipe</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select>
+                    <option value="SP">SP</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <select asp-for="City" id="city">
+                    @{
+                        foreach (var city in @ViewBag.Cities)
+                        {
+                            <option value="@city.Name">@city.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                @foreach (var person in @ViewBag.People)
+                {
+                    <input type="checkbox" name="selectedPerson" value="@person.Name" id="@person.Name" class="form-check-inline" />
+                    <label for="@person.Name">@person.Name</label>
+                    <br />
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Inserir" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Voltar para a listagem</a>
+</div>
+
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

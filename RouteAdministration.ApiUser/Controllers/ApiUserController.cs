@@ -84,7 +84,7 @@ namespace RouteAdministration.ApiUser.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id, User userIn)
+        public IActionResult Delete(string id)
         {
             User user = new();
 
@@ -93,7 +93,7 @@ namespace RouteAdministration.ApiUser.Controllers
             if (user == null)
                 return NotFound();
 
-            _userService.Remove(userIn.Id, userIn);
+            _userService.Remove(user.Id, user);
 
             return Ok();
         }

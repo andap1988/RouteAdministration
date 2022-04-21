@@ -1,16 +1,22 @@
-﻿@model Models.Person
+﻿@model Models.City
 
 @{
-    ViewData["Title"] = "Remover Pessoa";
+    ViewData["Title"] = "Remover Cidade";
 }
 
 <h1>Apagar</h1>
 
-<h3>Você realmente deseja remover essa pessoa?</h3>
+<h3>Você realmente deseja remover essa cidade?</h3>
 <div><br />
     <h4>Pessoa</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.State)
+        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
         </dt>

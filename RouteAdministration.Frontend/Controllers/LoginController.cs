@@ -69,7 +69,7 @@ namespace RouteAdministration.Frontend.Controllers
 
                     await HttpContext.SignInAsync(userPrincipal);
 
-                    return RedirectToRoute(new { controller = "Home", action = "Index" });
+                    return RedirectToRoute(new { controller = "Upload", action = "Index" });
                 }
             }
 

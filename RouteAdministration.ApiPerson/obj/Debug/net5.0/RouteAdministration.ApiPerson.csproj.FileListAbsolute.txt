@@ -44,4 +44,3 @@ X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\D
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\Models.dll
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\Models.pdb
 X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\bin\Debug\net5.0\Newtonsoft.Json.dll
-X:\5by5-Interacao\VS2022\RouteAdministration\RouteAdministration.ApiPerson\obj\Debug\net5.0\RouteAdministration.ApiPerson.csproj.AssemblyReference.cache
