@@ -1,0 +1,26 @@
+﻿@model Models.HistoryGenerateFile
+
+@{
+    ViewData["Title"] = "Remover Arquivo";
+}
+
+<h1>Apagar</h1>
+
+<h3>Você realmente deseja remover esse arquivo?</h3>
+<div><br />
+    <h4>Pessoa</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FileName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+    </dl>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Remover" class="btn btn-danger" /> |
+        <a asp-action="Index">Voltar para a listagem</a>
+    </form>
+</div>

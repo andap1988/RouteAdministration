@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Models.HistoryGenerateFile>
+
+@{
+    ViewData["Title"] = "Download";
+}
+
+<h1>Download de Arquivos</h1>
+<hr />
+
+
+@if (!ViewBag.Authenticate)
+{
+    <div class="row h5">
+        <div class="col-md-12">
+            <span>Para acessar essa página, é necessário estar logado no sistema.</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 p-0 m-1">
+            <form method="post" asp-controller="Login" asp-action="Index">
+                <input class="btn btn-link" type="submit" value="Entrar" />
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.FileName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Service)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.City)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FileName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Service)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        <a asp-action="Download" asp-route-id="@item.Id">Download</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

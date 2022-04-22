@@ -1,10 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using RouteAdministration.Frontend.Service;
+using Spire.Doc;
+using Spire.Doc.Documents;
+using Spire.Doc.Fields;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +19,13 @@ namespace RouteAdministration.Frontend.Controllers
 {
     public class LoginController : Controller
     {
+        IWebHostEnvironment _appEnvironment;
+
+        public LoginController(IWebHostEnvironment env)
+        {
+            _appEnvironment = env;
+        }
+
         public IActionResult Index()
         {
             string user = "Anonymous";

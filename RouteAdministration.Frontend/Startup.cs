@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using RouteAdministration.Frontend.Configuration;
+using RouteAdministration.Frontend.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +34,14 @@ namespace RouteAdministration.Frontend
                     config.AccessDeniedPath = "/Login/AccessDenied";
                     config.ExpireTimeSpan = TimeSpan.FromHours(1);
                 });
+
+            services.Configure<RARouteSettings>(
+                Configuration.GetSection(nameof(RARouteSettings)));
+
+            services.AddSingleton<IRARouteSettings>(sp =>
+                    sp.GetRequiredService<IOptions<RARouteSettings>>().Value);
+
+            services.AddSingleton<RARouteService>();
 
             services.AddControllersWithViews();
         }

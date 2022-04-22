@@ -18,11 +18,11 @@ namespace RouteAdministration.ApiEquip.Service
 
         public List<Equip> Get()
         {
-            List<Equip> equip = new();
+            List<Equip> equips = new();
 
-            equip = _equip.Find(equip => true).ToList();
+            equips = _equip.Find(equip => true).ToList();
 
-            return equip;
+            return equips;
         }
 
         public Equip Get(string id)
@@ -30,6 +30,24 @@ namespace RouteAdministration.ApiEquip.Service
             Equip equip = new();
 
             equip = _equip.Find<Equip>(equip => equip.Id == id).FirstOrDefault();
+
+            return equip;
+        }
+
+        public List<Equip> GetCity(string city)
+        {
+            List<Equip> equips = new();
+
+            equips = _equip.Find(equip => equip.City == city).ToList();
+
+            return equips;
+        }
+
+        public Equip GetEquipsByEquipName(string equipName)
+        {
+            Equip equip = new();
+
+            equip = _equip.Find<Equip>(equip => equip.Name == equipName).FirstOrDefault();
 
             return equip;
         }

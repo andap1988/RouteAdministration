@@ -102,7 +102,7 @@ namespace RouteAdministration.Frontend.Service
             return headerExcel;
         }
 
-        public static List<string> ReadServiceExcelFile(string pathWebRoot, string nameColumn)
+        public static List<string> ReadColumnExcelFile(string pathWebRoot, string nameColumn)
         {
             List<string> services = new();
 
@@ -199,6 +199,23 @@ namespace RouteAdministration.Frontend.Service
                     text.Add(line);
                     line = reader.ReadLine();
                 }
+            }
+
+            return text;
+        }
+
+        public static string ReadFileStringInFolder(string title, string pathWebRoot)
+        {
+            string text = "";
+
+            string fileName = title + ".txt";
+            string folder = "\\File\\";
+            string pathFinal = pathWebRoot + folder + fileName;
+
+            using (StreamReader reader = new(pathFinal))
+            {
+                var line = reader.ReadLine();
+                text = line;
             }
 
             return text;

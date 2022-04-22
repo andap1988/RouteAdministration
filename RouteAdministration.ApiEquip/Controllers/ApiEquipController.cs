@@ -39,6 +39,28 @@ namespace RouteAdministration.ApiEquip.Controllers
             return equip;
         }
 
+        [HttpGet("city/{city}")]
+        public ActionResult<List<Equip>> GetCity(string city)
+        {
+            var equips = _equipService.GetCity(city);
+
+            if (equips == null)
+                return NotFound();
+
+            return equips;
+        }
+
+        [HttpGet("equip/{equipName}")]
+        public ActionResult<Equip> GetEquipsByEquipName(string equipName)
+        {
+            var equip = _equipService.GetEquipsByEquipName(equipName);
+
+            if (equip == null)
+                return NotFound();
+
+            return equip;
+        }
+
         [HttpPost]
         public ActionResult<Equip> Create(Equip equip)
         {

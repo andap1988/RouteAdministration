@@ -34,9 +34,23 @@ namespace RouteAdministration.ApiCity.Service
             return city;
         }
 
+        public City GetName(string name)
+        {
+            City city = new();
+
+            city = _city.Find<City>(city => city.Name == name).FirstOrDefault();
+
+            return city;
+        }
+
         public City Create(City city)
         {
-            _city.InsertOne(city);
+            City existsCity = new();
+
+            existsCity = GetName(city.Name);
+
+            if (existsCity == null)
+                _city.InsertOne(city);
 
             return city;
         }

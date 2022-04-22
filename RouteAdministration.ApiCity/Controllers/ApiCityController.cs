@@ -46,6 +46,8 @@ namespace RouteAdministration.ApiCity.Controllers
 
             if (cityInsertion == null)
                 return BadRequest("Cidade - A Api esta fora do ar. Tente novamente em instantes.");
+            if (cityInsertion.Id == null)
+                return BadRequest("Cidade - A cidade já está cadastrada no banco de dados.");
 
             return CreatedAtRoute("GetCity", new { id = city.Id }, city);
         }

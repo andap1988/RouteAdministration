@@ -35,19 +35,29 @@ namespace RouteAdministration.Frontend.Service
             }
         }
 
-        public static void WriteStringInFolder(List<string> text, string title, string pathWebRoot)
+        public static void WriteStringInFolder(List<string> text = null, string singleString = null, string title = "a", string pathWebRoot = "")
         {
             string fileName = title + ".txt";
             string folder = "\\File\\";
             string pathFinal = pathWebRoot + folder + fileName;
 
-            using (StreamWriter writer = new(pathFinal))
+            if (text != null)
             {
-                text.ForEach(textUnique =>
+                using (StreamWriter writer = new(pathFinal))
                 {
-                    writer.WriteLine(textUnique);
+                    text.ForEach(textUnique =>
+                    {
+                        writer.WriteLine(textUnique);
 
-                });
+                    });
+                }
+            }
+            else if (singleString != null)
+            {
+                using (StreamWriter writer = new(pathFinal))
+                {
+                    writer.WriteLine(singleString);
+                }
             }
         }
     }
