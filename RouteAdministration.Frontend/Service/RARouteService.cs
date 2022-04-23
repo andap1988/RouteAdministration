@@ -34,6 +34,15 @@ namespace RouteAdministration.Frontend.Service
 
             return hgFile;
         }
+        public HistoryGenerateFile GetFileByName(string fileName)
+        {
+            HistoryGenerateFile hgFile = new();
+
+            hgFile = _historyGenerateFile.Find(hgFile => hgFile.FileName == fileName).FirstOrDefault();
+
+            return hgFile;
+        }
+
 
         public void Create(HistoryGenerateFile hgFile)
         {

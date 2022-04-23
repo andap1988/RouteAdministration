@@ -34,10 +34,10 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
-                <th>
+                <th class="text-center">
                     @Html.DisplayNameFor(model => model.City)
                 </th>
-                <th>
+                <th class="text-center">
                     @Html.DisplayNameFor(model => model.People)
                 </th>
                 <th></th>
@@ -50,11 +50,11 @@ else
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td>
+                    <td class="text-center">
                         @Html.DisplayFor(modelItem => item.City)
                     </td>
-                    <td>
-                        <select>
+                    <td class="text-center">
+                        <select style="width: 200px">
                         @for (var i = 0; i < item.People.Count; i++)
                         {
                             <option value="@item.People[i].Name">@item.People[i].Name</option>
@@ -62,7 +62,7 @@ else
                         </select>
                     </td>
                     <td>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Remover</a>
                     </td>
                 </tr>
             }

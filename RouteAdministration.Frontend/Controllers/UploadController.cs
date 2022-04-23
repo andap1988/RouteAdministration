@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace RouteAdministration.Frontend.Controllers
 {
+    [Authorize]
     public class UploadController : Controller
     {
         IWebHostEnvironment _appEnvironment;
@@ -52,6 +53,21 @@ namespace RouteAdministration.Frontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendFile(IFormFile file)
         {
+            ViewBag.User = HttpContext.User.Identity.Name;
+            ViewBag.Authenticate = true;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
+            if (file == null)
+            {
+                TempData["error"] = "Não foi possível verificar o nome do arquivo. Tente novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             if (ReadFiles.IsValid("Plan", ".xlsx", _appEnvironment.WebRootPath))
                 RemoveFiles.RemoveFromFolder("Plan", ".xlsx", _appEnvironment.WebRootPath);
 
@@ -61,11 +77,17 @@ namespace RouteAdministration.Frontend.Controllers
             if (CheckExcelFile.IsExcel(file))
             {
                 if (!await WriteFiles.WriteFileInFolder(file, pathWebRoot))
-                    return BadRequest(new { message = "Houve um erro na gravação do arquivo. Por favor, tente novamente." });
+                {
+                    TempData["error"] = "Houve um erro na gravação do arquivo. Por favor, tente novamente.";
+
+                    return RedirectToAction(nameof(Index));
+                }                
             }
             else
             {
-                return BadRequest(new { message = "Apenas arquivos com extensão .xls ou .xlsx" });
+                TempData["error"] = "Apenas arquivos com extensão .xls ou .xlsx.";
+
+                return RedirectToAction(nameof(Index));
             }
 
             ViewData["Resultado"] = $"Um arquivo foi enviado ao servidor, com tamanho total de {file.Length} bytes!";

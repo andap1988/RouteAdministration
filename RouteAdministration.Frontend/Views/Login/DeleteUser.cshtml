@@ -1,0 +1,39 @@
+﻿@model Models.User
+
+@{
+    ViewData["Title"] = "Remover Usuário";
+}
+
+<h1>Remover</h1>
+
+<h3>Você realmente deseja remover esse usuário?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Username)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Username)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Role)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Role)
+        </dd>
+    </dl>
+    <form asp-action="DeleteUser">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Remover" class="btn btn-danger" />
+    </form>
+    <br />
+    <br />
+    <a asp-action="Index">Voltar</a>
+</div>

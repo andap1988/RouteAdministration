@@ -1,5 +1,4 @@
 ﻿@model Models.User
-@*@model IEnumerable<RouteMaster.Frontend.Models.Equip>*@
 
 @{
     ViewData["Title"] = "Login";
@@ -22,11 +21,75 @@
             Deseja criar uma conta?
             <a asp-action="Create">Criar Conta</a>
         </p>
+        <br />
+        <h4>Gerenciamento de Usuários</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <label>Nome</label>
+                    </th>
+                    <th class="text-center">
+                        <label>Usuário</label>
+                    </th>
+                    <th class="text-center">
+                        <label>Tipo</label>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in @ViewBag.Users)
+                {
+                    <tr>
+                        <td>
+                            <label>@user.Name</label>
+                        </td>
+                        <td class="text-center">
+                            <label>@user.Username</label>
+                        </td>
+                        <td class="text-center">
+                            <label>@user.Role</label>
+                        </td>
+                        <td class="text-center">
+                            <a asp-action="EditUser" asp-route-id="@user.Id">Editar</a>   |
+                            <a asp-action="DeleteUser" asp-route-id="@user.Id">Remover</a>   
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+        <h4>Gerenciamento de Documentos</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <label>Documentos em Diretório</label>
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in @ViewBag.Files)
+                {
+                    <tr>
+                        <td>
+                            <label>@file.FileName</label>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Download", "DownloadFile", new { fileName = file.FileName })   |
+                            <a asp-action="DeleteFile" asp-route-id="@file.FileName"> Remover</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
 }
 else
 {
-    <h4>Bem-Vindo</h4>
+    <h4>Bem-vindo</h4>
     <hr />
     <div class="row">
         <div class="col-md-4">
@@ -48,8 +111,10 @@ else
             </form>
         </div>
     </div>
-
-    <h2>@ViewData["Message"]</h2>
+    <br />
 }
+
+
+
 
 

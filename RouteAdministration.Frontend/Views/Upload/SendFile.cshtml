@@ -6,19 +6,38 @@
 
 <h4>Arquivo</h4>
 <hr />
-<div class="row">
-    <div class="col-md-12">
-        <div class="container">
-            @if (ViewData["Error"] != null)
-            {
-                <h2 class="display-4">@ViewData["Erro"]</h2>
-            }
-        </div>
-        <div class="container">
-            @if (ViewData["Resultado"] != null)
-            {
-                <h2 class="display-5">@ViewData["Resultado"]</h2>
-            }
+
+@if (!ViewBag.Authenticate)
+{
+    <div class="row h5">
+        <div class="col-md-12">
+            <span>Para acessar essa página, é necessário estar logado no sistema.</span>
         </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-md-6 p-0 m-1">
+            <form method="post" asp-controller="Login" asp-action="Index">
+                <input class="btn btn-link" type="submit" value="Entrar" />
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="container">
+                @if (ViewData["Error"] != null)
+                {
+                    <h2 class="display-4">@ViewData["Erro"]</h2>
+                }
+            </div>
+            <div class="container">
+                @if (ViewData["Resultado"] != null)
+                {
+                    <h2 class="display-5">@ViewData["Resultado"]</h2>
+                }
+            </div>
+        </div>
+    </div>
+}

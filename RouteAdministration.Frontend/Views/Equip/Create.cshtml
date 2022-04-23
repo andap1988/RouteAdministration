@@ -9,7 +9,7 @@
 <hr />
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -19,13 +19,13 @@
             </div>
             <div class="form-group">
                 <label>Estado</label>
-                <select>
+                <select style="width: 100px">
                     <option value="SP">SP</option>
                 </select>
             </div>
             <div class="form-group">
                 <label asp-for="City" class="control-label"></label>
-                <select asp-for="City" id="city">
+                <select style="width: 300px" asp-for="City" id="city">
                     @{
                         foreach (var city in @ViewBag.Cities)
                         {
@@ -34,6 +34,7 @@
                     }
                 </select>
             </div>
+                <label>Pessoas disponíveis para a equipe</label>
             <div class="form-group">
                 @foreach (var person in @ViewBag.People)
                 {
@@ -43,12 +44,12 @@
                 }
             </div>
             <div class="form-group">
-                <input type="submit" value="Inserir" class="btn btn-primary" />
+                <input type="submit" value="Inserir" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
     <a asp-action="Index">Voltar para a listagem</a>
 </div>

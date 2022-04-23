@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Models.HistoryGenerateFile>
 
 @{
-    ViewData["Title"] = "Download";
+    ViewData["Title"] = "Baixar Arquivos";
 }
 
-<h1>Download de Arquivos</h1>
+<h1>Baixar Arquivos</h1>
 <hr />
 
 
@@ -31,15 +31,6 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.FileName)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Service)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.City)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Date)
-                </th>
                 <th></th>
             </tr>
         </thead>
@@ -51,20 +42,53 @@ else
                         @Html.DisplayFor(modelItem => item.FileName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Service)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        <a asp-action="Download" asp-route-id="@item.Id">Download</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+                        @Html.ActionLink("Download", "DownloadFile", new { fileName = item.FileName })
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 }
+
+@*<table class="table">
+    <thead>
+    <tr>
+    <th>
+    @Html.DisplayNameFor(model => model.FileName)
+    </th>
+    <th>
+    @Html.DisplayNameFor(model => model.Service)
+    </th>
+    <th>
+    @Html.DisplayNameFor(model => model.City)
+    </th>
+    <th>
+    @Html.DisplayNameFor(model => model.Date)
+    </th>
+    <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+    <tr>
+    <td>
+    @Html.DisplayFor(modelItem => item.FileName)
+    </td>
+    <td>
+    @Html.DisplayFor(modelItem => item.Service)
+    </td>
+    <td>
+    @Html.DisplayFor(modelItem => item.City)
+    </td>
+    <td>
+    @Html.DisplayFor(modelItem => item.Date)
+    </td>
+    <td>
+    <a asp-action="Download" asp-route-id="@item.Id">Download</a> |
+    <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+    </td>
+    </tr>
+    }
+    </tbody>
+    </table>*@

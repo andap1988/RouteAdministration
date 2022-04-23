@@ -15,8 +15,9 @@ namespace Models
         public string Id { get; set; }
 
         [Display(Name = "Nome")]
-        [Required(ErrorMessage = "O nome é obrigatório.")]
         public string Name { get; set; }
+
+        [Display(Name = "Equipe")]
         public string TeamName { get; set; } = String.Empty;
         public string Error { get; set; } = String.Empty;
     }

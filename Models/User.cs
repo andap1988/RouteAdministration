@@ -22,6 +22,8 @@ namespace Models
 
         [Display(Name = "Senha")]
         public string Password { get; set; }
+
+        [Display(Name = "Tipo")]
         public string Role { get; set; } = "user";
         public string Error { get; set; } = string.Empty;
     }

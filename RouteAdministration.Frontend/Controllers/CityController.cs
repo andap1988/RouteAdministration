@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using RouteAdministration.Frontend.Service;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace RouteAdministration.Frontend.Controllers
 {
+    [Authorize]
     public class CityController : Controller
     {
         IWebHostEnvironment _appEnvironment;
@@ -43,11 +45,25 @@ namespace RouteAdministration.Frontend.Controllers
 
             var cities = await new ConnectToCityApi().GetCities();
 
+            if (cities == null || cities[0].Error != "")
+            {
+                TempData["error"] = "Cidade - A API está fora do ar. Favor tentar novamente";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(cities);
         }
 
         public IActionResult Create()
         {
+            ViewBag.User = HttpContext.User.Identity.Name;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
             List<Person> cities = ReadFiles.ReadTXTCities(_appEnvironment.WebRootPath);
 
             ViewBag.Cities = cities;
@@ -61,29 +77,43 @@ namespace RouteAdministration.Frontend.Controllers
         {
             var cityInsertion = await new ConnectToCityApi().CreateNewCity(city);
 
-            if (cityInsertion == null)
-                return BadRequest("Cidade - Houve um erro na gravação da nova cidade. Favor tentar novamente");
+            if (cityInsertion == null || cityInsertion.Error != "")
+            {
+                TempData["error"] = "Cidade - Houve um erro na gravação da nova cidade. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
 
             return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Delete(string id)
         {
+            ViewBag.User = HttpContext.User.Identity.Name;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
             if (id == null)
             {
-                return NotFound();
+                TempData["error"] = "Cidade - Houve um erro na página. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
             }
 
             var city = await new ConnectToCityApi().GetCityById(id);
 
-            if (city == null)
+            if (city == null || city.Error != "")
             {
-                return NotFound();
-            }
+                TempData["error"] = "Cidade - A API está fora do ar. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }            
 
             return View(city);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -92,7 +122,11 @@ namespace RouteAdministration.Frontend.Controllers
             var cityRemove = await new ConnectToCityApi().RemoveCity(id);
 
             if (cityRemove.Error != "ok")
-                return BadRequest("Cidade - Houve um erro na exclusão da cidade. Favor tentar novamente");
+            {
+                TempData["error"] = "Cidade - Houve um erro na exclusão da cidade. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
 
             return RedirectToAction(nameof(Index));
         }

@@ -20,7 +20,7 @@ namespace Models
         [Display(Name = "Cidade")]
         public string City { get; set; }
 
-        [Display(Name = "Pessoas do Time")]
+        [Display(Name = "Pessoas da Equipe")]
         public List<Person> People { get; set; } = new();
         public string Error { get; set; } = String.Empty;
     }

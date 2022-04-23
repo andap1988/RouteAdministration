@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using RouteAdministration.Frontend.Service;
@@ -8,11 +9,13 @@ using Spire.Doc.Fields;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace RouteAdministration.Frontend.Controllers
 {
+    [Authorize]
     public class RouteController : Controller
     {
         IWebHostEnvironment _appEnvironment;
@@ -46,6 +49,26 @@ namespace RouteAdministration.Frontend.Controllers
                 ViewBag.Role = "";
             }
 
+            var folder = _appEnvironment.WebRootPath + "\\File\\";
+            string[] files = Directory.GetFiles(folder);
+            bool hasPlan = false;
+
+            foreach (var file in files)
+            {
+                var split = file.Split("\\");
+                var name = split[split.Length - 1];
+
+                if (name == "Plan.xlsx")
+                    hasPlan = true;
+            }
+
+            if (!hasPlan)
+            {
+                TempData["error"] = "Não foi carregado nenhum arquivo (.xlsx) para leitura.";
+
+                return RedirectToRoute(new { controller = "Upload", action = "Index" });
+            }
+
             var headers = ReadFiles.ReadHeaderExcelFile(_appEnvironment.WebRootPath);
 
             ViewBag.User = user;
@@ -57,8 +80,31 @@ namespace RouteAdministration.Frontend.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Services(List<string> selectedHeaders)
+        public ActionResult Services(List<string> selectedHeaders)
         {
+            ViewBag.User = HttpContext.User.Identity.Name;
+            ViewBag.Authenticate = true;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
+            if (!selectedHeaders.Contains("OS") &&
+                !selectedHeaders.Contains("CIDADE") &&
+                !selectedHeaders.Contains("BASE") &&
+                !selectedHeaders.Contains("SERVIÇO") &&
+                !selectedHeaders.Contains("ENDEREÇO") &&
+                !selectedHeaders.Contains("NUMERO") &&
+                !selectedHeaders.Contains("COMPLEMENTO") &&
+                !selectedHeaders.Contains("CEP") &&
+                !selectedHeaders.Contains("BAIRRO"))
+            {
+                TempData["error"] = "As colunas: OS, CIDADE, BASE, SERVIÇO, ENDEREÇO, NUMERO, COMPLEMENTO, CEP E BAIRRO são obrigatórias";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             List<string> services = new();
             List<string> servicesSearch = new();
 
@@ -90,8 +136,16 @@ namespace RouteAdministration.Frontend.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Cities(string service)
+        public ActionResult Cities(string service)
         {
+            ViewBag.User = HttpContext.User.Identity.Name;
+            ViewBag.Authenticate = true;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
             var columns = ReadFiles.ReadFileInFolder("headers", _appEnvironment.WebRootPath);
             var dataBySelectedHeaders = ReadFiles.ReadExcelFile(columns, _appEnvironment.WebRootPath);
 
@@ -128,11 +182,51 @@ namespace RouteAdministration.Frontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Equips(string city)
         {
+            ViewBag.User = HttpContext.User.Identity.Name;
+            ViewBag.Authenticate = true;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
+            var service = ReadFiles.ReadFileStringInFolder("service", _appEnvironment.WebRootPath);
+            var columns = ReadFiles.ReadFileInFolder("headers", _appEnvironment.WebRootPath);
+            var dataBySelectedHeaders = ReadFiles.ReadExcelFile(columns, _appEnvironment.WebRootPath);
+
+            List<string> cities = new();
+            List<IDictionary<string, string>> dictonaryByServiceAndCity = new();
+
+            columns.ForEach(column =>
+            {
+                if (column.ToUpper() == "SERVIÇO")
+                {
+                    for (int i = 0; i < dataBySelectedHeaders.Count; i++)
+                    {
+                        dictonaryByServiceAndCity = dataBySelectedHeaders
+                            .Where(data => data.ContainsKey(column))
+                            .Where(data => data.Values.Contains(service))
+                            .Where(data => data.Values.Contains(city))
+                            .ToList();
+                    }
+                }
+            });
+
+            var quantityService = dictonaryByServiceAndCity.Count;
+
             var listEquipsByCity = await new ConnectToEquipApi().GetEquipByCity(city);
+
+            if (listEquipsByCity == null || listEquipsByCity[0].Error != "")
+            {
+                TempData["error"] = "Equipe - A API está fora do ar. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
 
             WriteFiles.WriteStringInFolder(null, city, "city", _appEnvironment.WebRootPath);
 
             ViewBag.City = city;
+            ViewBag.QuantityService = quantityService;
 
             return View(listEquipsByCity);
         }
@@ -141,9 +235,31 @@ namespace RouteAdministration.Frontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> GenerateRoute(List<string> selectedEquips)
         {
+            ViewBag.User = HttpContext.User.Identity.Name;
+            ViewBag.Authenticate = true;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
+            if (selectedEquips.Count < 1)
+            {
+                TempData["error"] = "Equipe - É necessário adicionar pelo menos uma equipe para gerar a rota.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             List<Equip> listEquipsByEquipName = new();
 
             listEquipsByEquipName = await new ConnectToEquipApi().GetEquipsByEquipsName(selectedEquips);
+
+            if (listEquipsByEquipName == null || listEquipsByEquipName[0].Error != "")
+            {
+                TempData["error"] = "Equipe - A API está fora do ar. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
 
             var service = ReadFiles.ReadFileStringInFolder("service", _appEnvironment.WebRootPath);
             var city = ReadFiles.ReadFileStringInFolder("city", _appEnvironment.WebRootPath);
@@ -172,12 +288,19 @@ namespace RouteAdministration.Frontend.Controllers
 
             columns.ForEach(column =>
             {
-                if (column != "OS" && column != "CIDADE" && column != "BASE" && column != "SERVIÇO" && column != "ENDEREÇO" 
+                if (column != "OS" && column != "CIDADE" && column != "BASE" && column != "SERVIÇO" && column != "ENDEREÇO"
                     && column != "NUMERO" && column != "COMPLEMENTO" && column != "CEP" && column != "BAIRRO")
                 {
                     otherColumns.Add(column);
                 }
-            });            
+            });
+
+            if ((dictonaryByServiceAndCity.Count / selectedEquips.Count) > 5)
+            {
+                TempData["error"] = "A quantidade de serviços por equipe supera a marca de 5. A rota não será gerada.";
+
+                return RedirectToAction(nameof(Index));
+            }
 
             /* Begin Header DOC */
 
@@ -436,7 +559,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             service = service.Replace("Ç", "C").Replace("ç", "c").Replace("Ã", "A").Replace("ã", "a").Replace("É", "e").Replace("é", "e").Replace(" ", "");
             city = city.Replace("Ç", "C").Replace("ç", "c").Replace("Ã", "A").Replace("ã", "a").Replace("É", "e").Replace("é", "e").Replace(" ", "");
-            
+
             string nameFile = $"Route{service}{city}{DateTime.Now.Date.ToString("ddMMyyyy")}.docx";
 
             document.SaveToFile(_appEnvironment.WebRootPath + "\\File\\" + nameFile, FileFormat.Docx);
@@ -459,102 +582,6 @@ namespace RouteAdministration.Frontend.Controllers
             RemoveFiles.RemoveFromFolder("city", ".txt", _appEnvironment.WebRootPath);
 
             return View();
-        }
-
-        public ActionResult DownloadFiles()
-        {
-            string user = "Anonymous";
-            bool authenticate = false;
-
-            if (HttpContext.User.Identity.IsAuthenticated)
-            {
-                user = HttpContext.User.Identity.Name;
-                authenticate = true;
-
-                if (HttpContext.User.IsInRole("adm"))
-                    ViewBag.Role = "adm";
-                else
-                    ViewBag.Role = "user";
-            }
-            else
-            {
-                user = "Não Logado";
-                authenticate = false;
-                ViewBag.Role = "";
-            }
-
-            ViewBag.User = user;
-            ViewBag.Authenticate = authenticate;
-
-            List<HistoryGenerateFile> hgFile = _raRouteService.Get();
-
-            return View(hgFile);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DownloadFiles(HistoryGenerateFile hgFile)
-        {
-
-
-            return View();
-        }
-
-        /*
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public FileResult DownloadFile()
-        {
-            var service = ReadFiles.ReadFileStringInFolder("service", _appEnvironment.WebRootPath);
-            var city = ReadFiles.ReadFileStringInFolder("city", _appEnvironment.WebRootPath);
-
-            service = service.Replace("Ç", "C").Replace("ç", "c").Replace("Ã", "A").Replace("ã", "a").Replace("É", "e").Replace("é", "e").Replace(" ", "");
-            city = city.Replace("Ç", "C").Replace("ç", "c").Replace("Ã", "A").Replace("ã", "a").Replace("É", "e").Replace("é", "e").Replace(" ", "");
-
-            string nameFile = $"Route{service}{city}{DateTime.Now.Date.ToString("ddMMyyyy")}.docx";
-
-            string folder = "\\File\\";
-            string pathFinal = _appEnvironment.WebRootPath + folder + nameFile;
-
-            byte[] bytes = System.IO.File.ReadAllBytes(pathFinal);
-
-            string contentType = "application/octet-stream";
-
-            RemoveFiles.RemoveFromFolder("service", ".txt", _appEnvironment.WebRootPath);
-            RemoveFiles.RemoveFromFolder("city", ".txt", _appEnvironment.WebRootPath);
-
-            return File(bytes, contentType, nameFile);
-        }
-        */
-
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var file = _raRouteService.Get(id);
-
-            if (file == null)
-            {
-                return NotFound();
-            }
-
-            return View(file);
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(string id, HistoryGenerateFile hgFile)
-        {
-            _raRouteService.Delete(id);
-
-            /*if (hgFileRemove.Error != "ok")
-                return BadRequest("Pessoa - Houve um erro na exclusão do usuário. Favor tentar novamente");*/
-
-            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -27,6 +27,8 @@ namespace Models
         [Display(Name = "Data de Geração")]
         public string Date { get; set; }
         public List<string> Headers { get; set; }
+
+        [Display(Name = "Equipes")]
         public List<string> Equips { get; set; }
         public string Error { get; set; } = string.Empty;
     }

@@ -34,7 +34,7 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
-                <th>
+                <th class="text-center">
                     @Html.DisplayNameFor(model => model.TeamName)
                 </th>
                 <th></th>
@@ -44,15 +44,15 @@ else
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
+                    <td class="col-md-6">
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td>
+                    <td class="text-center">
                         @Html.DisplayFor(modelItem => item.TeamName)
                     </td>
-                    <td>
+                    <td class="text-center">
                         <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Remover</a>
                     </td>
                 </tr>
             }

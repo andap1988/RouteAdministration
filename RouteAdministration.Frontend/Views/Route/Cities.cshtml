@@ -12,11 +12,11 @@
         <form asp-action="Equips">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label class="font-weight-bold">Serviços</label>
+                <label class="font-weight-bold">Cidades</label>
                 <fieldset data-role="controlgroup">
                     @foreach (var city in @ViewBag.Cities)
                     {
-                        <input type="radio" name="city" id="@city" value="@city">
+                        <input type="radio" name="city" id="@city" value="@city" checked>
                         <label for="@city">@city</label>
                         <br />
                     }
@@ -24,7 +24,7 @@
             </div>
             <br />
             <div class="form-group" id="btnSend">
-                <input type="submit" id="btn" value="Enviar" class="btn btn-primary" />
+                <input type="submit" id="btn" value="Selecionar" class="btn btn-info" />
             </div>
         </form>
     </div>

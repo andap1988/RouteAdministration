@@ -11,6 +11,7 @@ using Spire.Doc.Fields;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,13 +21,15 @@ namespace RouteAdministration.Frontend.Controllers
     public class LoginController : Controller
     {
         IWebHostEnvironment _appEnvironment;
+        private readonly RARouteService _raRouteService;
 
-        public LoginController(IWebHostEnvironment env)
+        public LoginController(IWebHostEnvironment env, RARouteService raRouteService)
         {
             _appEnvironment = env;
+            _raRouteService = raRouteService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             string user = "Anonymous";
             bool authenticate = false;
@@ -49,6 +52,41 @@ namespace RouteAdministration.Frontend.Controllers
                 ViewBag.Role = "";
             }
 
+            var folder = _appEnvironment.WebRootPath + "\\File\\";
+
+            string[] files = Directory.GetFiles(folder);
+
+            List<HistoryGenerateFile> hgFiles = new();
+
+            foreach (var file in files)
+            {
+                var split = file.Split("\\");
+                var name = split[split.Length - 1];
+
+                var extesion = name.Split(".")[1];
+
+                if (extesion == "docx")
+                    hgFiles.Add(new HistoryGenerateFile { FileName = name, FullPath = file });
+            }
+
+            List<User> users = new();
+
+            users = await new ConnectToUserApi().GetUsers();
+
+            if (users == null || users[0].Error != "")
+            {
+                TempData["error"] = "Usuário - A API está fora do ar. Tente novamente.";
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            users.ForEach(user =>
+            {
+                user.Password = "";
+            });
+
+            ViewBag.Files = hgFiles;
+            ViewBag.Users = users;
             ViewBag.User = user;
             ViewBag.Authenticate = authenticate;
 
@@ -64,7 +102,27 @@ namespace RouteAdministration.Frontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult<User>> Login(User userLogin)
         {
+            if (string.IsNullOrEmpty(userLogin.Username))
+            {
+                TempData["error"] = "O nome do usuário é obrigatório.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            else if (string.IsNullOrEmpty(userLogin.Password))
+            {
+                TempData["error"] = "A senha do usuário é obrigatório.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             var userLoginSearch = await new ConnectToUserApi().GetUserByUsername(userLogin.Username);
+
+            if (userLoginSearch == null || userLoginSearch.Error != "")
+            {
+                TempData["error"] = "Login - A API está fora do ar. Tente novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
 
             if (userLoginSearch != null)
             {
@@ -86,9 +144,9 @@ namespace RouteAdministration.Frontend.Controllers
                 }
             }
 
-            ViewBag.Message = "Usuário ou senha incorretos.";            
+            TempData["error"] = "Usuário ou senha inválido.";
 
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
@@ -102,6 +160,13 @@ namespace RouteAdministration.Frontend.Controllers
 
         public IActionResult Create()
         {
+            ViewBag.User = HttpContext.User.Identity.Name;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
             return View();
         }
 
@@ -109,10 +174,227 @@ namespace RouteAdministration.Frontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult<User>> Create(User userLogin)
         {
+            if (string.IsNullOrEmpty(userLogin.Name) || string.IsNullOrWhiteSpace(userLogin.Name))
+            {
+                TempData["error"] = "O nome do usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            else if (string.IsNullOrEmpty(userLogin.Username) || string.IsNullOrWhiteSpace(userLogin.Username))
+            {
+                TempData["error"] = "O usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            else if (string.IsNullOrEmpty(userLogin.Password) || string.IsNullOrWhiteSpace(userLogin.Password))
+            {
+                TempData["error"] = "A senha não pode ser vazia.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var userLoginSearch = await new ConnectToUserApi().GetUserByUsername(userLogin.Username);
+
+            if (userLoginSearch != null)
+            {
+                TempData["error"] = "Já existe um usuário cadastrado com o usuário informado.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
             var userLoginInsertion = await new ConnectToUserApi().CreateNewUser(userLogin);
 
             if (userLoginInsertion == null || userLoginInsertion.Error != "")
-                return BadRequest("Usuário - Houve um erro na gravação do novo usuário. Favor tentar novamente");
+            {
+                TempData["error"] = "Usuário - Houve um erro na gravação do novo usuário. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public FileResult DownloadFile(string fileName)
+        {
+            var folder = _appEnvironment.WebRootPath + "\\File\\";
+            var pathFinal = folder + fileName;
+            byte[] bytes = System.IO.File.ReadAllBytes(pathFinal);
+            string contentType = "application/octet-stream";
+
+            return File(bytes, contentType, fileName);
+        }
+
+        public IActionResult DeleteFile(string id)
+        {
+            ViewBag.User = HttpContext.User.Identity.Name;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
+            if (id == null)
+            {
+                TempData["error"] = "Apagar arquivo - Houve um erro na página. Favor tentar novamente";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var file = _raRouteService.GetFileByName(id);
+
+            if (file == null || file.Error != "")
+            {
+                TempData["error"] = "Apagar arquivo - A API está fora do ar. Favor tentar novamente";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(file);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteFile(string id, HistoryGenerateFile hgFile)
+        {
+            string folder = _appEnvironment.WebRootPath + "\\File\\";
+            string pathFile = folder + id;
+
+            FileInfo file = new(pathFile);
+
+            file.Delete();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> EditUser(string id)
+        {
+            ViewBag.User = HttpContext.User.Identity.Name;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
+            if (id == null)
+            {
+                TempData["error"] = "Usuário - Houve um erro na página. Favor tentar novamente";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var user = await new ConnectToUserApi().GetUserById(id);
+
+            user.Password = "";
+
+            if (user == null || user.Error != "")
+            {
+                TempData["error"] = "Usuário - A API está fora do ar. Favor tentar novamente";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(string id, User user)
+        {
+            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrWhiteSpace(user.Name))
+            {
+                TempData["error"] = "O nome do usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            else if (string.IsNullOrEmpty(user.Username) || string.IsNullOrWhiteSpace(user.Username))
+            {
+                TempData["error"] = "O usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var userSearch = await new ConnectToUserApi().GetUserById(id);
+
+            if (userSearch == null || userSearch.Error != "")
+            {
+                TempData["error"] = "Usuário - A API está fora do ar.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (user.Username != userSearch.Username)
+            {
+                var userByUsername = await new ConnectToUserApi().GetUserByUsername(user.Username);
+
+                if (userByUsername != null)
+                {
+                    TempData["error"] = "Já existe um usuário cadastrado com o usuário informado.";
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            userSearch.Name = user.Name;
+            userSearch.Username = user.Username;
+            userSearch.Role = user.Role;
+
+            if (!string.IsNullOrEmpty(user.Password))
+                userSearch.Password = user.Password;
+
+            var userInsertion = await new ConnectToUserApi().EditUser(userSearch);
+
+            if (userInsertion == null || userInsertion.Error != "")
+            {
+                TempData["error"] = "Usuário - A API está fora do ar.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            ViewBag.User = HttpContext.User.Identity.Name;
+
+            if (HttpContext.User.IsInRole("adm"))
+                ViewBag.Role = "adm";
+            else
+                ViewBag.Role = "user";
+
+            if (id == null)
+            {
+                TempData["error"] = "Usuário - Houve um erro na página. Favor tentar novamente";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var user = await new ConnectToUserApi().GetUserById(id);
+
+            if (user == null || user.Error != "")
+            {
+                TempData["error"] = "Usuário - A API está fora do ar. Favor tentar novamente";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            user.Password = "";
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string id, User user)
+        {
+            var personRemove = await new ConnectToUserApi().RemoveUser(id);
+
+            if (personRemove.Error != "ok")
+            {
+                TempData["error"] = "Usuário - Houve um erro na exclusão do usuário. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
 
             return RedirectToAction(nameof(Index));
         }

@@ -31,7 +31,6 @@ namespace RouteAdministration.Frontend
                 {
                     config.Cookie.Name = "UserLoginCookie";
                     config.LoginPath = "/Login/Index";
-                    config.AccessDeniedPath = "/Login/AccessDenied";
                     config.ExpireTimeSpan = TimeSpan.FromHours(1);
                 });
 

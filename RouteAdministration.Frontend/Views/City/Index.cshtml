@@ -34,7 +34,7 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
-                <th>
+                <th class="text-center">
                     @Html.DisplayNameFor(model => model.State)
                 </th>
                 <th></th>
@@ -47,11 +47,11 @@ else
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td>
+                    <td class="text-center">
                         @Html.DisplayFor(modelItem => item.State)
                     </td>
-                    <td>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+                    <td class="text-center">
+                        <a asp-action="Delete" asp-route-id="@item.Id">Remover</a>
                     </td>
                 </tr>
             }

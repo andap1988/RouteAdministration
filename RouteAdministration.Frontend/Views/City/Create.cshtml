@@ -15,13 +15,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="State" class="control-label"></label>
-                <select asp-for="State" class="control-label">
+                <select style="width: 100px" asp-for="State" class="control-label">
                     <option value="SP">SP</option>
                 </select>
                 </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <select asp-for="Name" id="state">
+                <select style="width: 300px" asp-for="Name" id="state">
                     @{
                         foreach(var city in @ViewBag.Cities)
                         {
@@ -31,14 +31,14 @@
                 </select>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <br />
             <div class="form-group">
-                <input type="submit" value="Inserir" class="btn btn-primary" />
+                <input type="submit" value="Inserir" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
+<br />
 <div>
     <a asp-action="Index">Voltar para a listagem</a>
 </div>

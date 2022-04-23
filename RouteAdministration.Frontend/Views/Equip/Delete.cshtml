@@ -4,12 +4,10 @@
     ViewData["Title"] = "Remover Equipe";
 }
 
-<h1>Apagar</h1>
+<h1>Remover</h1>
 
 <h3>Você realmente deseja remover essa equipe?</h3>
 <div>
-    <br />
-    <h4>Pessoa</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -28,7 +26,7 @@
             @Html.DisplayNameFor(model => model.People)
         </dt>
         <dd class="col-sm-10">
-            <select>
+            <select style="width: 250px">
                 @for (var i = 0; i < Model.People.Count; i++)
                 {
                     <option value="@Model.People[i].Name">@Model.People[i].Name</option>
@@ -38,7 +36,9 @@
     </dl>
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Remover" class="btn btn-danger" /> |
-        <a asp-action="Index">Voltar para a listagem</a>
+        <input type="submit" value="Remover" class="btn btn-danger" />
     </form>
+    <br />
+    <br />
+    <a asp-action="Index">Voltar para a listagem</a>
 </div>

@@ -29,13 +29,13 @@ else
             <form method="post" enctype="multipart/form-data" asp-controller="Upload" asp-action="SendFile">
                 <div class="form-group">
                     <div class="col-md-10">
-                        <p>Enviar arquivo</p>
-                        <input type="file" name="file" value="Escolher Arquivo" multiple />
+                        <input class="btn btn-secondary" type="file" name="file" value="Escolher Arquivo" multiple />
                     </div>
                 </div>
+                <br />
                 <div class="form-group">
                     <div class="col-md-10">
-                        <input type="submit" value="Enviar Arquivo" />
+                        <input class="btn btn-primary" type="submit" value="Enviar Arquivo" />
                     </div>
                 </div>
             </form>

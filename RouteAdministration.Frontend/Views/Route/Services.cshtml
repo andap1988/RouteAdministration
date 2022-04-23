@@ -16,35 +16,62 @@
                 <fieldset data-role="controlgroup">
                     @foreach (var service in @ViewBag.Services)
                     {
-                        <input type="radio" name="service" id="@service" value="@service">
+                        <input type="radio" name="service" id="@service" value="@service" checked>
                         <label for="@service">@service</label>
                         <br />
                     }
                 </fieldset>
             </div>
             <br />
-@*            <div class="form-group" id="divCity" style="display: none">
-                <label class="font-weight-bold">Cidades</label>
-                <fieldset data-role="controlgroup">
-                    @foreach (var city in @ViewBag.Cities)
-                    {
-                        <input type="radio" name="city" id="@city.Name" value="@city.Name">
-                        <label for="@city.Name">@city.Name</label>
-                        <br />
-                    }
-                </fieldset>
-            </div>*@
             <div class="form-group" id="btnSend">
-                <input type="submit" id="btn" value="Enviar" class="btn btn-primary" />
+                <input type="submit" id="btn" value="Selecionar" class="btn btn-info" />
             </div>
-@*            <div class="form-group">
-                <input type="submit" id="btnSelect" value="Selecionar" class="btn btn-primary" onclick="showCity(event)" />
-            </div>*@
         </form>
     </div>
 </div>
 
-@* Funciona!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* Funciona! Salvo para quando for usar!
 <script>
     function showCity(e)
     {
