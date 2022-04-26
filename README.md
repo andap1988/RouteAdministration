@@ -16,7 +16,7 @@ O Sistema gera um documento de texto, onde estarão os dados solicitados pelo cl
 ### Etapas da usabilidade
 Ao entrar no website, é exibido um menu superior onde está toda navegação necessária no site. A navegação segue uma rota direcional para que tudo funcione corretamente. A geração de rotas só será bem-sucedida seguindo os menus: Usuário (fazer o login), Enviar Arquivo, Pessoas (cadastro de pessoas), Cidades (cadastro de cidades), Equipes (cadastro de equipes), Rotas (gerador das rotas) e Baixar Arquivos (gerados nas rotas). Para que tudo funcione corretamente, é necessário executar o projeto com todas as APIs. Caso deseje executar todas ao mesmo tempo, basta ir nas propriedades da solução e mudar para Multiplos projetos, ficando: ApiCity, ApiEquip, ApiPerson e ApiUser sem depuração e Frontend com depuração. Caso deseje subir uma por vez, basta seguir a sequencia: ApiCity, ApiEquip, ApiPerson, ApiUser e Frontend, selecionando na parte superior da IDE do Visual Studio o nome da API e clicar na seta verde vazada, ou CTRL + F5. 
 
-O usuário e senha temporário é: "temp". Basta digitar na pagina de login, que se abre na primeira vez que abre o site.
+O usuário e senha temporário é: "temp". Basta digitar na pagina de login, que se abre na primeira vez que o site carrega.
 
 ### Os menus
 
