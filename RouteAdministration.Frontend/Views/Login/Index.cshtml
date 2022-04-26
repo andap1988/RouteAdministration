@@ -7,7 +7,22 @@
 <h1>Login de Usuário</h1>
 <br />
 
-@if (@ViewBag.Authenticate)
+@if (ViewBag.User == "temp")
+{
+    <div class="row h5">
+        <div class="col-md-12">
+            <span>Você está logado no sistema com uma conta temporária. Favor clicar no link abaixo para criar sua conta.</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 p-0 m-1">
+            <form method="post" asp-controller="Login" asp-action="EditTemp">
+                <input class="btn btn-link" type="submit" value="Criar Conta" />
+            </form>
+        </div>
+    </div>
+}
+else @if (@ViewBag.Authenticate)
 {
     <div class="row">
         <div class="col-md-2">
@@ -53,7 +68,7 @@
                         </td>
                         <td class="text-center">
                             <a asp-action="EditUser" asp-route-id="@user.Id">Editar</a>   |
-                            <a asp-action="DeleteUser" asp-route-id="@user.Id">Remover</a>   
+                            <a asp-action="DeleteUser" asp-route-id="@user.Id">Remover</a>
                         </td>
                     </tr>
                 }
@@ -111,10 +126,12 @@ else
             </form>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-4">
+            <a asp-action="ForgotPassword">Esqueceu sua senha?</a>
+        </div>
+    </div>
     <br />
 }
-
-
-
 
 

@@ -45,12 +45,14 @@ namespace RouteAdministration.Frontend.Controllers
 
             var cities = await new ConnectToCityApi().GetCities();
 
-            if (cities == null || cities[0].Error != "")
+            if (cities == null)
             {
                 TempData["error"] = "Cidade - A API está fora do ar. Favor tentar novamente";
 
                 return RedirectToAction(nameof(Index));
             }
+
+            cities.Sort((cityOne, cityTwo) => cityOne.Name.CompareTo(cityTwo.Name));
 
             return View(cities);
         }
@@ -64,7 +66,7 @@ namespace RouteAdministration.Frontend.Controllers
             else
                 ViewBag.Role = "user";
 
-            List<Person> cities = ReadFiles.ReadTXTCities(_appEnvironment.WebRootPath);
+            List<City> cities = ReadFiles.ReadTXTCities(_appEnvironment.WebRootPath);
 
             ViewBag.Cities = cities;
 
@@ -83,6 +85,8 @@ namespace RouteAdministration.Frontend.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["success"] = "Cidade criada com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }
@@ -127,6 +131,8 @@ namespace RouteAdministration.Frontend.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["success"] = "Cidade removida com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }

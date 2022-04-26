@@ -22,6 +22,7 @@ namespace Models
 
         [Display(Name = "Pessoas da Equipe")]
         public List<Person> People { get; set; } = new();
+        public bool Status { get; set; } = true;
         public string Error { get; set; } = String.Empty;
     }
 }

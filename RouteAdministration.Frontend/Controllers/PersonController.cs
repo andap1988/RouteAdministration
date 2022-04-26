@@ -35,14 +35,21 @@ namespace RouteAdministration.Frontend.Controllers
             ViewBag.User = user;
             ViewBag.Authenticate = authenticate;
 
+            if (user == "temp")
+            {
+                return View();
+            }
+
             var people = await new ConnectToPersonApi().GetPeople();
 
-            if (people == null || people[0].Error != "")
+            if (people == null)
             {
                 TempData["error"] = "Pessoa - A API está fora do ar. Favor tentar novamente";
 
                 return RedirectToAction(nameof(Index));
             }
+
+            people.Sort((personOne, personTwo) => personOne.Name.CompareTo(personTwo.Name));
 
             return View(people);
         }
@@ -61,23 +68,37 @@ namespace RouteAdministration.Frontend.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult<Person>> Create(Person person)
+        public async Task<ActionResult<Person>> Create(Person personIn)
         {
-            if (string.IsNullOrEmpty(person.Name))
+            if (string.IsNullOrEmpty(personIn.Name) || string.IsNullOrWhiteSpace(personIn.Name))
             {
                 TempData["error"] = "O nome da pessoa é obrigatório";
 
                 return RedirectToAction(nameof(Index));
             }
 
-            var personInsertion = await new ConnectToPersonApi().CreateNewPerson(person);
+            List<Person> people = await new ConnectToPersonApi().GetPeople();
 
-            if (personInsertion == null || personInsertion.Error != null)
+            foreach(var person in people)
             {
-                TempData["error"] = "Pessoa - Houve um erro na gravação da nova pessoa. Favor tentar novamente";
+                if (person.Name == personIn.Name)
+                {
+                    TempData["error"] = "Pessoa - Já existe uma pessoa com nome identico no sistema.";
+
+                    return RedirectToAction(nameof(Create));
+                }
+            };
+
+            var personInsertion = await new ConnectToPersonApi().CreateNewPerson(personIn);
+
+            if (personInsertion == null || personInsertion.Error != "")
+            {
+                TempData["error"] = "Pessoa - Houve um erro na gravação da nova pessoa. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["success"] = "Pessoa criada com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }
@@ -175,6 +196,8 @@ namespace RouteAdministration.Frontend.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            TempData["success"] = "Pessoa editada com sucesso!";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -266,6 +289,8 @@ namespace RouteAdministration.Frontend.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["success"] = "Pessoa removida com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }

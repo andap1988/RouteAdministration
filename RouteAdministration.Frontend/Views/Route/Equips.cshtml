@@ -52,7 +52,7 @@ else
                         @Html.DisplayFor(modelItem => item.City)
                 </td>
                 <td>
-                    <select style="width: 300px">
+                    <select style="width: 300px" multiple>
                             @for (var i = 0; i < item.People.Count; i++)
                             {
                             <option value="@item.People[i].Name">@item.People[i].Name</option>

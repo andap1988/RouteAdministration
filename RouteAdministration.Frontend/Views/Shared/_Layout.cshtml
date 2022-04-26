@@ -1,10 +1,15 @@
 ﻿@{
     string error = null;
+    string success = null;
 
-	if (TempData["error"] != null)
-	{
-		error = (string)TempData["error"];
-	}
+    if (TempData["error"] != null)
+    {
+        error = (string)TempData["error"];
+    }
+    if (TempData["success"] != null)
+    {
+        success = (string)TempData["success"];
+    }
 }
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -17,9 +22,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light mb-5" style="background-color: #189AB4;box-shadow: 0px 10px 30px #0789a4aa;">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Route Administration</a>
+                <a class="navbar-brand" style="text-shadow: 0px 5px 10px #bbb; font-size: 1.5rem; font-weight: 600" asp-area="" asp-controller="Home" asp-action="Index">Route Administration</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -27,28 +32,25 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <strong><a class="nav-link text-dark border-right border-dark mr-1" asp-area="" asp-controller="Login" asp-action="Index">Usuário</a></strong>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Login" asp-action="Index">Usuário</a>
+                            <strong><a class="nav-link text-dark border-right border-dark mr-1" asp-area="" asp-controller="Upload" asp-action="Index">Enviar Arquivo</a></strong>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Upload" asp-action="Index">Enviar Arquivo</a>
+                            <strong><a class="nav-link text-dark border-right border-dark mr-1" asp-area="" asp-controller="Person" asp-action="Index">Pessoas</a></strong>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Person" asp-action="Index">Pessoas</a>
+                            <strong><a class="nav-link text-dark border-right border-dark mr-1" asp-area="" asp-controller="City" asp-action="Index">Cidades</a></strong>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="City" asp-action="Index">Cidades</a>
+                            <strong><a class="nav-link text-dark border-right border-dark mr-1" asp-area="" asp-controller="Equip" asp-action="Index">Equipes</a></strong>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Equip" asp-action="Index">Equipes</a>
+                            <strong><a class="nav-link text-dark border-right border-dark mr-1" asp-area="" asp-controller="Route" asp-action="Index">Rotas</a></strong>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Route" asp-action="Index">Rotas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark border-right mr-1" asp-area="" asp-controller="Download" asp-action="Index">Baixar Arquivos</a>
+                            <strong><a class="nav-link text-dark mr-1" asp-area="" asp-controller="Download" asp-action="Index">Baixar Arquivos</a></strong>
                         </li>
                     </ul>
                 </div>
@@ -56,18 +58,18 @@
             @if (string.IsNullOrEmpty(@ViewBag.Role))
             {
                 <div class="col-2 text-center">
-                    Olá, Visitante!
+                    Olá, <strong>Visitante!</strong>
                     <form method="post" asp-controller="Login" asp-action="Index">
-                        <input class="btn btn-link" type="submit" value="Entrar" />
+                        <input class="btn btn-link text-light border-bottom pb-1" type="submit" value="Entrar" />
                     </form>
                 </div>
             }
             else
             {
                 <div class="col-2 text-center">
-                    Olá, @ViewBag.User!
+                    Olá, <strong>@ViewBag.User!</strong>
                     <form method="post" asp-controller="Login" asp-action="Logout">
-                        <input class="btn btn-link" type="submit" value="Sair?" />
+                        <u><input class="btn btn-link text-light border-bottom pb-1" type="submit" value="Sair?" /></u>
                     </form>
                 </div>
             }
@@ -76,30 +78,48 @@
     <div class="container">
         <main role="main" class="pb-3">
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Erro</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">							
-								<p>@error</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-						</div>
-					</div>
-				</div>
-			</div>
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Erro</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>@error</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modalSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Sucesso</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>@success</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Fechar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-light bg-dark" style="opacity: .5">
         <div class="container">
-            &copy; 2022 - Route Administration - Gerenciador de Rotas
+            <span class="text-light"><strong>padnA</strong> &copy; 2022 - Route Administration - Gerenciador de Rotas</span>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -107,12 +127,19 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script type="text/javascript">
-		@if (error != null)
-		{
-			<text>
-					$("#exampleModal").modal("show")
-			</text>
-		}
-	</script>
+        @if (error != null)
+        {
+            <text>
+                                            $("#exampleModal").modal("show")
+            </text>
+        }
+
+        @if (success != null)
+        {
+            <text>
+                                            $("#modalSuccess").modal("show")
+            </text>
+        }
+    </script>
 </body>
 </html>

@@ -58,9 +58,9 @@ namespace RouteAdministration.Frontend.Service
             }
         }
 
-        public static List<Person> ReadTXTCities(string pathWebRoot)
+        public static List<City> ReadTXTCities(string pathWebRoot)
         {
-            List<Person> cities = new();
+            List<City> cities = new();
 
             string folder = "\\File\\";
             string path = pathWebRoot + folder + "sp-city.txt";
@@ -70,7 +70,7 @@ namespace RouteAdministration.Frontend.Service
                 var line = reader.ReadLine();
                 while (line != null)
                 {
-                    cities.Add(new Person { Name = line.Trim().Replace(",", "").Replace("\"", "") });
+                    cities.Add(new City { Name = line.Trim().Replace(",", "").Replace("\"", "").ToUpper() });
                     line = reader.ReadLine();
                 }
             }
@@ -93,7 +93,7 @@ namespace RouteAdministration.Frontend.Service
 
                 int cols = worksheet.Dimension.End.Column;
 
-                for (int i = 1; i < cols; i++)
+                for (int i = 1; i < cols + 1; i++)
                 {
                     headerExcel.Add(worksheet.Cells[1, i].Value.ToString());
                 }
@@ -119,7 +119,7 @@ namespace RouteAdministration.Frontend.Service
                 int cols = worksheet.Dimension.End.Column;
                 int rows = worksheet.Dimension.End.Row;
 
-                for (int col = 1; col < cols; col++)
+                for (int col = 1; col < cols + 1; col++)
                 {
                     if (worksheet.Cells[1, col].Value.ToString() == nameColumn)
                     {
@@ -162,7 +162,7 @@ namespace RouteAdministration.Frontend.Service
                 {
                     data = new Dictionary<string, string>();
 
-                    for (int col = 1; col < cols; col++)
+                    for (int col = 1; col < cols + 1; col++)
                     {
                         columns.ForEach(column =>
                         {

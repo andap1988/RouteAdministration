@@ -22,7 +22,7 @@ namespace RouteAdministration.ApiPerson.Service
         {
             List<Person> people = new();
 
-            people = _person.Find(person => true).ToList();
+            people = _person.Find(person => person.Status == true).ToList();
 
             return people;
         }
@@ -31,7 +31,7 @@ namespace RouteAdministration.ApiPerson.Service
         {
             Person person = new();
 
-            person = _person.Find<Person>(person => person.Id == id).FirstOrDefault();
+            person = _person.Find<Person>(person => person.Id == id && person.Status == true).FirstOrDefault();
 
             return person;
         }
@@ -40,7 +40,7 @@ namespace RouteAdministration.ApiPerson.Service
         {
             Person person = new();
 
-            person = _person.Find<Person>(person => person.Name == name).FirstOrDefault();
+            person = _person.Find<Person>(person => person.Name == name && person.Status == true).FirstOrDefault();
 
             return person;
         }
@@ -59,7 +59,9 @@ namespace RouteAdministration.ApiPerson.Service
 
         public void Remove(string id, Person personIn)
         {
-            _person.DeleteOne(person => person.Id == personIn.Id);
+            personIn.Status = false;
+
+            _person.ReplaceOne(person => person.Id == id, personIn);
         }
     }
 }

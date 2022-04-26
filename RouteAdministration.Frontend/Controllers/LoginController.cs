@@ -43,7 +43,6 @@ namespace RouteAdministration.Frontend.Controllers
                     ViewBag.Role = "adm";
                 else
                     ViewBag.Role = "user";
-
             }
             else
             {
@@ -140,11 +139,95 @@ namespace RouteAdministration.Frontend.Controllers
 
                     await HttpContext.SignInAsync(userPrincipal);
 
+                    if (userLoginSearch.Username == "temp")
+                    {
+                        ViewBag.User = "temp";
+
+                        return RedirectToAction(nameof(EditTemp));
+                    }
+
+                    TempData["success"] = "Usuário logado com sucesso!";
+
                     return RedirectToRoute(new { controller = "Upload", action = "Index" });
                 }
             }
 
             TempData["error"] = "Usuário ou senha inválido.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult EditTemp()
+        {
+            string user = "Anonymous";
+
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                user = HttpContext.User.Identity.Name;
+
+                if (HttpContext.User.IsInRole("adm"))
+                    ViewBag.Role = "adm";
+                else
+                    ViewBag.Role = "user";
+            }
+            else
+            {
+                user = "Não Logado";
+                ViewBag.Role = "";
+            }
+
+            ViewBag.User = user;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogoutTemp(User userLogin)
+        {
+            if (string.IsNullOrEmpty(userLogin.Name) || string.IsNullOrWhiteSpace(userLogin.Name))
+            {
+                TempData["error"] = "O nome do usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(EditTemp));
+            }
+            else if (string.IsNullOrEmpty(userLogin.Username) || string.IsNullOrWhiteSpace(userLogin.Username))
+            {
+                TempData["error"] = "O usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(EditTemp));
+            }
+            else if (string.IsNullOrEmpty(userLogin.Password) || string.IsNullOrWhiteSpace(userLogin.Password))
+            {
+                TempData["error"] = "A senha não pode ser vazia.";
+
+                return RedirectToAction(nameof(EditTemp));
+            }
+
+            var userLoginSearch = await new ConnectToUserApi().GetUserByUsername(userLogin.Username);
+
+            if (userLoginSearch != null)
+            {
+                TempData["error"] = "Já existe um usuário cadastrado com o usuário informado.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            userLogin.Role = "adm";
+
+            var userLoginInsertion = await new ConnectToUserApi().CreateNewUser(userLogin);
+
+            if (userLoginInsertion == null || userLoginInsertion.Error != "")
+            {
+                TempData["error"] = "Usuário - Houve um erro na gravação do novo usuário. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            await HttpContext.SignOutAsync();
+
+            var userRemove = await new ConnectToUserApi().GetUserByUsername("temp");
+            var userRemoved = await new ConnectToUserApi().RemoveUser(userRemove.Id);
 
             return RedirectToAction(nameof(Index));
         }
@@ -192,6 +275,12 @@ namespace RouteAdministration.Frontend.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            else if (userLogin.Username == "temp")
+            {
+                TempData["error"] = "Não é possível criar uma conta com esse usuário.";
+
+                return RedirectToAction(nameof(Index));
+            }
 
             var userLoginSearch = await new ConnectToUserApi().GetUserByUsername(userLogin.Username);
 
@@ -210,6 +299,8 @@ namespace RouteAdministration.Frontend.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["success"] = "Usuário cadastrado com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }
@@ -262,6 +353,116 @@ namespace RouteAdministration.Frontend.Controllers
             FileInfo file = new(pathFile);
 
             file.Delete();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(User user)
+        {
+            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrWhiteSpace(user.Name))
+            {
+                TempData["error"] = "O nome do usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            else if (string.IsNullOrEmpty(user.Username) || string.IsNullOrWhiteSpace(user.Username))
+            {
+                TempData["error"] = "A senha não pode ser vazia.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var userLoginSearch = await new ConnectToUserApi().GetUserByUsername(user.Username);
+
+            if (userLoginSearch == null || userLoginSearch.Error != "")
+            {
+                TempData["error"] = "Usuário - A API está fora do ar.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (userLoginSearch.Username == user.Username && userLoginSearch.Name == user.Name)
+            {
+                return RedirectToAction("NewPassword", userLoginSearch);
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RecoveryUser(User user)
+        {
+            if (string.IsNullOrEmpty(user.Name) || string.IsNullOrWhiteSpace(user.Name))
+            {
+                TempData["error"] = "O nome do usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            else if (string.IsNullOrEmpty(user.Username) || string.IsNullOrWhiteSpace(user.Username))
+            {
+                TempData["error"] = "O usuário não pode ser vazio.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var userLoginSearch = await new ConnectToUserApi().GetUserByUsername(user.Username);
+
+            if (userLoginSearch == null || userLoginSearch.Error != "")
+            {
+                TempData["error"] = "O usuário não existe.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (userLoginSearch.Username == user.Username && userLoginSearch.Name == user.Name)
+            {
+                User userTemp = new() { Id = userLoginSearch.Id, Name = userLoginSearch.Name, Role = "" };
+                return RedirectToAction("NewPassword", userTemp);
+            }
+
+            return View();
+        }
+
+        public IActionResult NewPassword(User userTemp)
+        {
+            return View(userTemp);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> NewPassword(string id, User user)
+        {
+            if (string.IsNullOrEmpty(user.Password) || string.IsNullOrWhiteSpace(user.Password))
+            {
+                TempData["error"] = "A senha não pode ser vazia.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            var userSearch = await new ConnectToUserApi().GetUserById(id);
+
+            user.Name = userSearch.Name;
+            user.Username = userSearch.Username;
+            user.Role = userSearch.Role;
+
+            var userWithNewPassword = await new ConnectToUserApi().EditUser(user);
+
+            if (userWithNewPassword == null || userWithNewPassword.Error != "")
+            {
+                TempData["error"] = "Usuário - A API está fora do ar.";
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["success"] = "Senha alterada com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }
@@ -350,6 +551,8 @@ namespace RouteAdministration.Frontend.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            TempData["success"] = "Usuário editado com sucesso!";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -364,7 +567,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (id == null)
             {
-                TempData["error"] = "Usuário - Houve um erro na página. Favor tentar novamente";
+                TempData["error"] = "Usuário - Houve um erro na página. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -373,7 +576,13 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (user == null || user.Error != "")
             {
-                TempData["error"] = "Usuário - A API está fora do ar. Favor tentar novamente";
+                TempData["error"] = "Usuário - A API está fora do ar. Favor tentar novamente.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            else if (user.Username == ViewBag.User)
+            {
+                TempData["error"] = "Você não pode excluir seu próprio usuário.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -387,14 +596,16 @@ namespace RouteAdministration.Frontend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(string id, User user)
         {
-            var personRemove = await new ConnectToUserApi().RemoveUser(id);
+            var userRemove = await new ConnectToUserApi().RemoveUser(id);
 
-            if (personRemove.Error != "ok")
+            if (userRemove.Error != "ok")
             {
                 TempData["error"] = "Usuário - Houve um erro na exclusão do usuário. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
+
+            TempData["success"] = "Usuário apagado com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }

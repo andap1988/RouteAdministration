@@ -35,14 +35,21 @@ namespace RouteAdministration.Frontend.Controllers
             ViewBag.User = user;
             ViewBag.Authenticate = authenticate;
 
+            if (user == "temp")
+            {
+                return View();
+            }
+
             var equips = await new ConnectToEquipApi().GetEquips();
 
-            if (equips == null || equips[0].Error != "")
+            if (equips == null)
             {
                 TempData["error"] = "Equipe - A API está fora do ar. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
+
+            equips.Sort((equipOne, equipTwo) => equipOne.Name.CompareTo(equipTwo.Name));
 
             return View(equips);
         }
@@ -75,6 +82,8 @@ namespace RouteAdministration.Frontend.Controllers
             }
 
             List<Person> peopleWithoutTem = people.FindAll(person => person.TeamName == "");
+
+            peopleWithoutTem.Sort((personOne, personTwo) => personOne.Name.CompareTo(personTwo.Name));
 
             ViewBag.People = peopleWithoutTem;
             ViewBag.Cities = cities;
@@ -139,6 +148,8 @@ namespace RouteAdministration.Frontend.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
+
+            TempData["success"] = "Equipe criada com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }
@@ -206,6 +217,8 @@ namespace RouteAdministration.Frontend.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
+
+            TempData["success"] = "Equipe removida com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }

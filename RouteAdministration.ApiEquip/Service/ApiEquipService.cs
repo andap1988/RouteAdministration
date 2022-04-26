@@ -20,7 +20,7 @@ namespace RouteAdministration.ApiEquip.Service
         {
             List<Equip> equips = new();
 
-            equips = _equip.Find(equip => true).ToList();
+            equips = _equip.Find(equip => equip.Status == true).ToList();
 
             return equips;
         }
@@ -38,7 +38,7 @@ namespace RouteAdministration.ApiEquip.Service
         {
             List<Equip> equips = new();
 
-            equips = _equip.Find(equip => equip.City == city).ToList();
+            equips = _equip.Find(equip => equip.City == city && equip.Status == true).ToList();
 
             return equips;
         }
@@ -47,7 +47,7 @@ namespace RouteAdministration.ApiEquip.Service
         {
             Equip equip = new();
 
-            equip = _equip.Find<Equip>(equip => equip.Name == equipName).FirstOrDefault();
+            equip = _equip.Find<Equip>(equip => equip.Name == equipName && equip.Status == true).FirstOrDefault();
 
             return equip;
         }
@@ -66,7 +66,9 @@ namespace RouteAdministration.ApiEquip.Service
 
         public void Remove(string id, Equip equipIn)
         {
-            _equip.DeleteOne(equip => equip.Id == equipIn.Id);
+            equipIn.Status = false;
+
+            _equip.ReplaceOne(equip => equip.Id == id, equipIn);
         }
     }
 }

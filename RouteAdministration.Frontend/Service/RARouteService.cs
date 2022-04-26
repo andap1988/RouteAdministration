@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using RouteAdministration.Frontend.Configuration;
 using RouteAdministration.Frontend.Models;
 using System.Collections.Generic;
+using System.IO;
 
 namespace RouteAdministration.Frontend.Service
 {
@@ -42,7 +43,6 @@ namespace RouteAdministration.Frontend.Service
 
             return hgFile;
         }
-
 
         public void Create(HistoryGenerateFile hgFile)
         {

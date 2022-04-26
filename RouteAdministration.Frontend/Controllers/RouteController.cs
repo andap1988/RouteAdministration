@@ -27,7 +27,7 @@ namespace RouteAdministration.Frontend.Controllers
             _raRouteService = raRouteService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             string user = "Anonymous";
             bool authenticate = false;
@@ -69,6 +69,15 @@ namespace RouteAdministration.Frontend.Controllers
                 return RedirectToRoute(new { controller = "Upload", action = "Index" });
             }
 
+            var equips = await new ConnectToEquipApi().GetEquips();
+
+            if (equips.Count < 1)
+            {
+                TempData["error"] = "Não é possível iniciar uma rota sem ter pelo menos 1 (uma) equipe cadastrada.";
+
+                return RedirectToRoute(new { controller = "Home", action = "Index" });
+            }
+
             var headers = ReadFiles.ReadHeaderExcelFile(_appEnvironment.WebRootPath);
 
             ViewBag.User = user;
@@ -90,17 +99,17 @@ namespace RouteAdministration.Frontend.Controllers
             else
                 ViewBag.Role = "user";
 
-            if (!selectedHeaders.Contains("OS") &&
-                !selectedHeaders.Contains("CIDADE") &&
-                !selectedHeaders.Contains("BASE") &&
-                !selectedHeaders.Contains("SERVIÇO") &&
-                !selectedHeaders.Contains("ENDEREÇO") &&
-                !selectedHeaders.Contains("NUMERO") &&
-                !selectedHeaders.Contains("COMPLEMENTO") &&
-                !selectedHeaders.Contains("CEP") &&
+            if (!selectedHeaders.Contains("OS") ||
+                !selectedHeaders.Contains("CIDADE") ||
+                !selectedHeaders.Contains("BASE") ||
+                !selectedHeaders.Contains("SERVIÇO") ||
+                !selectedHeaders.Contains("ENDEREÇO") ||
+                !selectedHeaders.Contains("NUMERO") ||
+                !selectedHeaders.Contains("COMPLEMENTO") ||
+                !selectedHeaders.Contains("CEP") ||
                 !selectedHeaders.Contains("BAIRRO"))
             {
-                TempData["error"] = "As colunas: OS, CIDADE, BASE, SERVIÇO, ENDEREÇO, NUMERO, COMPLEMENTO, CEP E BAIRRO são obrigatórias";
+                TempData["error"] = "As colunas: OS, CIDADE, BASE, SERVIÇO, ENDEREÇO, NUMERO, COMPLEMENTO, CEP E BAIRRO são obrigatórias.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -169,6 +178,8 @@ namespace RouteAdministration.Frontend.Controllers
             });
 
             cities = cities.Distinct().ToList();
+
+            cities.Sort((cityOne, cityTwo) => cityOne.CompareTo(cityTwo));
 
             ViewBag.Cities = cities;
             ViewBag.Service = service;
@@ -298,6 +309,12 @@ namespace RouteAdministration.Frontend.Controllers
             if ((dictonaryByServiceAndCity.Count / selectedEquips.Count) > 5)
             {
                 TempData["error"] = "A quantidade de serviços por equipe supera a marca de 5. A rota não será gerada.";
+
+                return RedirectToAction(nameof(Index));
+            }
+            if (dictonaryByServiceAndCity.Count < selectedEquips.Count)
+            {
+                TempData["error"] = "A quantidade de equipes selecionadas é maior que a quantidade de serviço disponível. A rota não será gerada.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -449,6 +466,12 @@ namespace RouteAdministration.Frontend.Controllers
                 decimal restSplit = dictonaryByServiceAndCity.Count % listEquipsByEquipName.Count;
                 int listEquip = 0;
 
+                if (restSplit > 5)
+                {
+                    serviceSplit = 5;
+                    restSplit = Math.Ceiling((decimal)dictonaryByServiceAndCity.Count % 5);
+                }
+
                 for (int k = 0; k < dictonaryByServiceAndCity.Count; k++)
                 {
                     Paragraph paragraphEquip = section.AddParagraph();
@@ -507,14 +530,24 @@ namespace RouteAdministration.Frontend.Controllers
                     }
 
                     k--;
-
-                    if (k == dictonaryByServiceAndCity.Count - 2)
+                    
+                    if (restSplit == dictonaryByServiceAndCity.Count - (k + 1) && restSplit != 0)
                     {
-                        k++;
+                        //k++;
 
-                        if (restSplit > 0)
+                        Paragraph paragraphEquipRest = section.AddParagraph();
+                        TextRange trEquipRest = paragraphEquipRest.AppendText($"Nome da Equipe: {listEquipsByEquipName[listEquip].Name}");
+                        trEquipRest.CharacterFormat.FontSize = 14;
+                        trEquipRest.CharacterFormat.Bold = true;
+                        trEquipRest.CharacterFormat.FontName = "Arial";
+
+                        emptyParagraph = section.AddParagraph();
+                        emptyParagraph.AppendText(" ");
+
+
+                        for (int i = 0; i < restSplit; i++)
                         {
-                            var dictionary = dictonaryByServiceAndCity[dictonaryByServiceAndCity.Count - 1];
+                            var dictionary = dictonaryByServiceAndCity[k];
 
                             Paragraph paragraph1 = section.AddParagraph();
                             TextRange tr1 = paragraph1.AppendText($"Contrato: {(dictionary.ContainsKey("CONTRATO") ? dictionary["CONTRATO"] : "                     ")} - Assinante: {(dictionary.ContainsKey("ASSINANTE") ? dictionary["ASSINANTE"] : "                            ")} - Período:     :     /     :     .");
@@ -552,8 +585,10 @@ namespace RouteAdministration.Frontend.Controllers
 
                             emptyParagraph = section.AddParagraph();
                             emptyParagraph.AppendText(" ");
+
+                            k++;
                         }
-                    }
+                    }                    
                 }
             }
 

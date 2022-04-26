@@ -19,6 +19,7 @@ namespace Models
 
         [Display(Name = "Equipe")]
         public string TeamName { get; set; } = String.Empty;
+        public bool Status { get; set; } = true;
         public string Error { get; set; } = String.Empty;
     }
 }

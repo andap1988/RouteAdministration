@@ -5,7 +5,22 @@
 <h1>Rotas</h1>
 <hr />
 
-@if (!ViewBag.Authenticate)
+@if (ViewBag.User == "temp")
+{
+    <div class="row h5">
+        <div class="col-md-12">
+            <span>Você está logado no sistema com uma conta temporária. Favor clicar no link abaixo para criar sua conta.</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 p-0 m-1">
+            <form method="post" asp-controller="Login" asp-action="EditTemp">
+                <input class="btn btn-link" type="submit" value="Criar Conta" />
+            </form>
+        </div>
+    </div>
+}
+else @if (!ViewBag.Authenticate)
 {
     <div class="row h5">
         <div class="col-md-12">
