@@ -72,7 +72,7 @@ namespace RouteAdministration.Frontend.Controllers
         {
             if (string.IsNullOrEmpty(personIn.Name) || string.IsNullOrWhiteSpace(personIn.Name))
             {
-                TempData["error"] = "O nome da pessoa é obrigatório";
+                TempData["error"] = "O nome da pessoa é obrigatório.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -114,7 +114,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (id == null)
             {
-                TempData["error"] = "Pessoa - Houve um erro na página. Favor tentar novamente";
+                TempData["error"] = "Pessoa - Houve um erro na página. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -123,7 +123,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (person == null || person.Error != "")
             {
-                TempData["error"] = "Pessoa - A API está fora do ar. Favor tentar novamente";
+                TempData["error"] = "Pessoa - A API está fora do ar. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -137,7 +137,7 @@ namespace RouteAdministration.Frontend.Controllers
         {
             if (string.IsNullOrEmpty(person.Name))
             {
-                TempData["error"] = "O nome da pessoa é obrigatório";
+                TempData["error"] = "O nome da pessoa é obrigatório.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -212,7 +212,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (id == null)
             {
-                TempData["error"] = "Pessoa - Houve um erro na página. Favor tentar novamente";
+                TempData["error"] = "Pessoa - Houve um erro na página. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -221,7 +221,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (person == null || person.Error != "")
             {
-                TempData["error"] = "Pessoa - A API está fora do ar. Favor tentar novamente";
+                TempData["error"] = "Pessoa - A API está fora do ar. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }

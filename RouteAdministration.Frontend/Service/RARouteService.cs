@@ -35,6 +35,7 @@ namespace RouteAdministration.Frontend.Service
 
             return hgFile;
         }
+
         public HistoryGenerateFile GetFileByName(string fileName)
         {
             HistoryGenerateFile hgFile = new();
@@ -44,14 +45,10 @@ namespace RouteAdministration.Frontend.Service
             return hgFile;
         }
 
-        public void Create(HistoryGenerateFile hgFile)
-        {
+        public void Create(HistoryGenerateFile hgFile) =>
             _historyGenerateFile.InsertOne(hgFile);
-        }
 
-        public async void Delete(string id)
-        {
+        public void Delete(string id) =>
             _historyGenerateFile.DeleteOne(equip => equip.Id == id);
-        }
     }
 }

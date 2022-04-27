@@ -55,14 +55,10 @@ namespace RouteAdministration.ApiCity.Service
             return city;
         }
 
-        public void Update(string id, City cityIn)
-        {
+        public void Update(string id, City cityIn) =>
             _city.ReplaceOne(city => city.Id == id, cityIn);
-        }
 
-        public void Remove(string id, City cityIn)
-        {
+        public void Remove(string id, City cityIn) =>
             _city.DeleteOne(city => city.Id == cityIn.Id);
-        }
     }
 }

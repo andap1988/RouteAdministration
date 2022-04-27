@@ -15,7 +15,6 @@ namespace RouteAdministration.Frontend.Service
 
             try
             {
-                //var extension = "." + file.FileName.Split(".")[file.FileName.Split(".").Length - 1];
                 fileName = "Plan.xlsx";
 
                 string folder = "\\File\\";

@@ -59,10 +59,8 @@ namespace RouteAdministration.ApiEquip.Service
             return equip;
         }
 
-        public void Update(string id, Equip equipIn)
-        {
+        public void Update(string id, Equip equipIn) =>
             _equip.ReplaceOne(equip => equip.Id == id, equipIn);
-        }
 
         public void Remove(string id, Equip equipIn)
         {

@@ -36,9 +36,7 @@ namespace RouteAdministration.Frontend.Controllers
             ViewBag.Authenticate = authenticate;
 
             if (user == "temp")
-            {
                 return View();
-            }
 
             var equips = await new ConnectToEquipApi().GetEquips();
 

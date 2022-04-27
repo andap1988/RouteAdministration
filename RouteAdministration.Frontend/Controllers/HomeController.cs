@@ -47,8 +47,6 @@ namespace RouteAdministration.Frontend.Controllers
                 ViewBag.Role = "";
             }
 
-            //var result = await new ConnectToRadarApi().GetLocation();
-
             List<User> users = new();
 
             users = await new ConnectToUserApi().GetUsers();

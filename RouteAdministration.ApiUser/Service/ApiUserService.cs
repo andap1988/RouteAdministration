@@ -60,14 +60,10 @@ namespace RouteAdministration.ApiUser.Service
             return user;
         }
 
-        public void Update(string id, User userIn)
-        {
+        public void Update(string id, User userIn) =>
             _user.ReplaceOne(user => user.Id == id, userIn);
-        }
 
-        public void Remove(string id, User userIn)
-        {
+        public void Remove(string id, User userIn) =>
             _user.DeleteOne(user => user.Id == userIn.Id);
-        }
     }
 }

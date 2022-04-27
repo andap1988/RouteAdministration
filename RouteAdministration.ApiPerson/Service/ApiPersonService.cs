@@ -52,10 +52,8 @@ namespace RouteAdministration.ApiPerson.Service
             return person;
         }
 
-        public void Update(string id, Person personIn)
-        {
+        public void Update(string id, Person personIn) =>
             _person.ReplaceOne(person => person.Id == id, personIn);
-        }
 
         public void Remove(string id, Person personIn)
         {

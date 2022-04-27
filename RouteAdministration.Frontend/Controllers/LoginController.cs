@@ -326,7 +326,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (id == null)
             {
-                TempData["error"] = "Apagar arquivo - Houve um erro na página. Favor tentar novamente";
+                TempData["error"] = "Apagar arquivo - Houve um erro na página. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -335,7 +335,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (file == null || file.Error != "")
             {
-                TempData["error"] = "Apagar arquivo - A API está fora do ar. Favor tentar novamente";
+                TempData["error"] = "Apagar arquivo - A API está fora do ar. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -478,7 +478,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (id == null)
             {
-                TempData["error"] = "Usuário - Houve um erro na página. Favor tentar novamente";
+                TempData["error"] = "Usuário - Houve um erro na página. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -489,7 +489,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (user == null || user.Error != "")
             {
-                TempData["error"] = "Usuário - A API está fora do ar. Favor tentar novamente";
+                TempData["error"] = "Usuário - A API está fora do ar. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -605,7 +605,7 @@ namespace RouteAdministration.Frontend.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["success"] = "Usuário apagado com sucesso!";
+            TempData["success"] = "Usuário removido com sucesso!";
 
             return RedirectToAction(nameof(Index));
         }

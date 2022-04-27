@@ -47,7 +47,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             if (cities == null)
             {
-                TempData["error"] = "Cidade - A API está fora do ar. Favor tentar novamente";
+                TempData["error"] = "Cidade - A API está fora do ar. Favor tentar novamente.";
 
                 return RedirectToAction(nameof(Index));
             }
