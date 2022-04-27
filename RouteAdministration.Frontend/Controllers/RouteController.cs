@@ -352,7 +352,7 @@ namespace RouteAdministration.Frontend.Controllers
 
             /* End Header DOC */
 
-            /* Begin Equip */
+            /* Begin Equip DOC */
 
             if (listEquipsByEquipName.Count < 2)
             {
@@ -530,20 +530,20 @@ namespace RouteAdministration.Frontend.Controllers
                     }
 
                     k--;
-                    
+
                     if (restSplit == dictonaryByServiceAndCity.Count - (k + 1) && restSplit != 0)
                     {
-                        //k++;
+                        if (!(listEquipsByEquipName.Count == listEquip))
+                        {
+                            Paragraph paragraphEquipRest = section.AddParagraph();
+                            TextRange trEquipRest = paragraphEquipRest.AppendText($"Nome da Equipe: {listEquipsByEquipName[listEquip].Name}");
+                            trEquipRest.CharacterFormat.FontSize = 14;
+                            trEquipRest.CharacterFormat.Bold = true;
+                            trEquipRest.CharacterFormat.FontName = "Arial";
 
-                        Paragraph paragraphEquipRest = section.AddParagraph();
-                        TextRange trEquipRest = paragraphEquipRest.AppendText($"Nome da Equipe: {listEquipsByEquipName[listEquip].Name}");
-                        trEquipRest.CharacterFormat.FontSize = 14;
-                        trEquipRest.CharacterFormat.Bold = true;
-                        trEquipRest.CharacterFormat.FontName = "Arial";
-
-                        emptyParagraph = section.AddParagraph();
-                        emptyParagraph.AppendText(" ");
-
+                            emptyParagraph = section.AddParagraph();
+                            emptyParagraph.AppendText(" ");
+                        }
 
                         for (int i = 0; i < restSplit; i++)
                         {
@@ -588,7 +588,7 @@ namespace RouteAdministration.Frontend.Controllers
 
                             k++;
                         }
-                    }                    
+                    }
                 }
             }
 

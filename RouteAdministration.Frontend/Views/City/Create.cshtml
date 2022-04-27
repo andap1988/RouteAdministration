@@ -18,12 +18,12 @@
                 <select style="width: 100px" asp-for="State" class="control-label">
                     <option value="SP">SP</option>
                 </select>
-                </div>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <select style="width: 300px" asp-for="Name" id="state">
                     @{
-                        foreach(var city in @ViewBag.Cities)
+                        foreach (var city in @ViewBag.Cities)
                         {
                             <option value="@city.Name">@city.Name</option>
                         }
