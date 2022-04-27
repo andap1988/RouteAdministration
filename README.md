@@ -34,6 +34,8 @@ O sexto item do menu é “Rotas”. Nessa página se iniciará o processo de ge
 
 O último item do menu é “Baixar Arquivos”. Nessa página é exibido todos os documentos de texto que foram gerados pelo sistema. Em sua primeira exibição, caso nenhuma rota tenha sido gerada anteriormente, nada será mostrado. Ainda, é possível fazer o download dos arquivos gerados.
 
+Toda criação de rota gera um documento de dados. Os dados desse documento são gravados em uma coleção de histórico no MongoDB, contendo as principais informações, como:  nome do documento, endereço que foi gravado, o nome do serviço, a data do coumento, entre outros.
+
 ### Dependências
 
 | __Opções__ | __Descrição__ | __Versão__ |
